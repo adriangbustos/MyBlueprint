@@ -3,3 +3,4 @@
 2026-06-09T13:03:16 | fix: adjust timing calculation on checkpoint trigger
 2026-06-09T13:55:29 | docs: update track configuration parameters in README
 2026-06-09T17:20:13 | chore: clean up telemetry debug logs
+2026-06-15T12:30:01 | perf: throttle telemetry event broadcast frequency
