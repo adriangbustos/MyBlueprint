@@ -1,0 +1,9 @@
+# Modelos 3D y archivos binarios pesados
+*.obj
+*.fbx
+*.gltf
+*.glb
+*.dae
+*.stl
+*.3ds
+*.ply
