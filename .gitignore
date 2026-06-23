@@ -7,3 +7,9 @@
 *.stl
 *.3ds
 *.ply
+*nodes.json
+*points.json
+*read_glb.js
+*replace_html.js
+*track_snippet.txt
+*create_snippet.js
