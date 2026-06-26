@@ -8,3 +8,4 @@
 2026-06-15T17:16:53 | refactor: optimize track sector render loop
 2026-06-21T14:41:04 | refactor: optimize track sector render loop
 2026-06-21T21:02:48 | style: improve leaderboard contrast and mobile padding
+2026-06-26T11:39:09 | perf: throttle telemetry event broadcast frequency
