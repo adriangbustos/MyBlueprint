@@ -369,6 +369,17 @@
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.enableZoom = true;
+
+        // Limitar la inclinación para no ver debajo del mapa (ligeramente por encima de 90 grados)
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+
+        // Configuración estilo Roblox: click derecho y click izquierdo para rotar, sin paneo
+        controls.enablePan = false;
+        controls.mouseButtons = {
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.ROTATE
+        };
         controls.enabled = false; // Desactivado al inicio (el mouse no hace nada en modo seguir)
 
         let modoCamaraLibre = false;
@@ -894,6 +905,11 @@
                 const distanciaDetras = 5;
                 const alturaVision = 4;
 
+                // Calculamos cuánto se movió el coche desde el último frame
+                const deltaPos = new THREE.Vector3().subVectors(posActual, controls.target);
+                // Actualizamos el target de los controles para que siempre mire al coche
+                controls.target.copy(posActual);
+
                 if (!modoCamaraLibre) {
                     // MODO SEGUIR FIJO: Sigue detrás del carro rígidamente (mouse bloqueado)
                     const direccion = new THREE.Vector3().subVectors(puntoAdelante, posActual).normalize();
@@ -901,9 +917,10 @@
                     camera.position.y = posActual.y + alturaVision;
                     camera.lookAt(posActual);
                 } else {
-                    // MODO CÁMARA LIBRE AMARRADA: Sigue la posición del carro en el espacio,
-                    // pero OrbitControls hereda el mouse para que puedas arrastrar y rotar la vista
-                    controls.target.copy(posActual);
+                    // MODO CÁMARA LIBRE AMARRADA:
+                    // Al sumar deltaPos, la cámara viaja junto al coche manteniendo la distancia y el ángulo relativo.
+                    // OrbitControls (configurado arriba) te permite rotar libremente arrastrando el click (estilo Roblox).
+                    camera.position.add(deltaPos);
                     controls.update();
                 }
             }
