@@ -29,6 +29,37 @@
             z-index: 1;
         }
 
+        /* --- START SCREEN --- */
+        #start-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s;
+        }
+
+        #start-btn {
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            background: #ff1801;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 24, 1, 0.4);
+        }
+
+        #start-btn:disabled {
+            background: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
         /* --- HUD DE TELEMETRÍA (ESTILO PREMIUM CLARO) --- */
         .hud-element {
             position: fixed;
@@ -41,43 +72,105 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
-        #sectors {
+        #timing-hud {
+            position: fixed;
             top: 20px;
             left: 20px;
+            width: 350px;
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: white;
+            z-index: 10;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        #timing-lap {
+            text-align: center;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 6px 0;
+            background: #333;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        #timing-times {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+        }
+
+        .time-block {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            min-width: 180px;
         }
 
-        .sector {
-            padding: 6px 12px;
-            border-left: 3px solid #ccc;
-            font-weight: 600;
+        .time-block:last-child {
+            text-align: right;
+        }
+
+        .time-label {
             font-size: 11px;
-            letter-spacing: 1px;
-            color: #888;
+            color: #aaa;
+            font-weight: 600;
+            margin-bottom: 2px;
+            text-transform: uppercase;
         }
 
-        .sector.active {
-            border-left-color: #00aa44;
-            color: #00aa44;
-            background: rgba(0, 170, 68, 0.05);
+        .time-value {
+            font-family: 'Courier New', monospace;
+            font-size: 20px;
+            font-weight: bold;
         }
 
-        #telemetry {
+        .time-divider {
+            width: 1px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #timing-sectors {
+            display: flex;
+            height: 22px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sector-bar {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.4);
+            background: #2a2a2a;
+            border-right: 1px solid rgba(0, 0, 0, 0.6);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sector-bar:last-child {
+            border-right: none;
+        }
+
+        #hud-dashboard {
+            position: fixed;
             bottom: 20px;
             right: 20px;
-            text-align: right;
-            min-width: 160px;
-            border-right: 3px solid #ff1801;
+            width: 320px;
+            height: 320px;
+            z-index: 10;
+            transform-origin: bottom right;
+            transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        .speed {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 36px;
-            font-weight: bold;
-            color: #111;
+        #hud-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.2));
         }
 
         #cam-toggle {
@@ -153,23 +246,81 @@
 
 <body>
 
-    <button id="cam-toggle" class="hud-element" onclick="toggleCamara()">Modo: Seguir Coche</button>
-
-    <div id="sectors" class="hud-element">
-        <div id="sec-q1" class="sector active">S1: NOTAS</div>
-        <div id="sec-q2" class="sector">S2: MATEMÁTICAS</div>
-        <div id="sec-q3" class="sector">S3: CODING</div>
-        <div id="sec-q4" class="sector">S4: VOLUNTARIADO</div>
+    <!-- START SCREEN -->
+    <div id="start-screen">
+        <button id="start-btn" disabled>Cargando Modelos 3D...</button>
     </div>
 
-    <div id="telemetry" class="hud-element">
-        <div class="speed"><span id="kmh">0</span> <span
-                style="font-size: 14px; font-family: sans-serif; color: #888;">KM/H</span></div>
-        <div style="font-size: 10px; color: #666; letter-spacing: 1px; margin-bottom: 8px;">DRIVE: W / S</div>
-        <div id="coords"
-            style="font-size: 12px; color: #ff1801; font-family: 'Courier New', monospace; font-weight: bold; text-align: left; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 4px;">
-            X: 0.00<br>Y: 0.00<br>Z: 0.00
+    <button id="cam-toggle" class="hud-element" onclick="toggleCamara()">Modo: Seguir Coche</button>
+
+    <div id="timing-hud">
+        <div id="timing-lap">Lap <span id="lap-count">1</span></div>
+        <div id="timing-times">
+            <div class="time-block">
+                <span class="time-label">Current</span>
+                <span class="time-value" id="current-time">0:00.000</span>
+            </div>
+            <div class="time-divider"></div>
+            <div class="time-block">
+                <span class="time-label">Best</span>
+                <span class="time-value" id="best-time">--:--.---</span>
+            </div>
         </div>
+        <div id="timing-sectors">
+            <div class="sector-bar" id="ui-sec-0">S1</div>
+            <div class="sector-bar" id="ui-sec-1">S2</div>
+            <div class="sector-bar" id="ui-sec-2">S3</div>
+            <div class="sector-bar" id="ui-sec-3">S4</div>
+        </div>
+    </div>
+
+    <div id="hud-dashboard">
+        <svg id="hud-svg" viewBox="0 0 400 400">
+            <!-- Background & Outer Ring -->
+            <circle cx="200" cy="200" r="180" fill="rgba(20, 20, 20, 0.9)" stroke="#0044cc" stroke-width="20"
+                style="backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);" />
+
+            <!-- Dark inner track for bars -->
+            <circle cx="200" cy="200" r="140" fill="none" stroke="#222" stroke-width="30" />
+
+            <!-- Green Throttle (Left side) -->
+            <!-- Cir: 2*PI*140 = 879.6. We want a 120 deg arc -> 293.2 -->
+            <!-- rotate(150) starts it at bottom left -->
+            <circle cx="200" cy="200" r="140" fill="none" stroke="#00cc44" stroke-width="30" stroke-linecap="round"
+                stroke-dasharray="293.2 880" stroke-dashoffset="293.2" transform="rotate(150 200 200)"
+                id="svg-throttle" />
+
+            <!-- Red Brake (Right side) -->
+            <circle cx="200" cy="200" r="140" fill="none" stroke="#ff1a1a" stroke-width="30" stroke-linecap="round"
+                stroke-dasharray="293.2 880" stroke-dashoffset="293.2" transform="rotate(-50 200 200)" id="svg-brake" />
+
+            <!-- Speed fill ring (Blue) -->
+            <circle cx="200" cy="200" r="180" fill="none" stroke="#3385ff" stroke-width="20" stroke-linecap="round"
+                stroke-dasharray="1131" stroke-dashoffset="1131" transform="rotate(135 200 200)" id="svg-speed-ring" />
+
+            <!-- Labels -->
+            <text x="200" y="140" fill="#aaa" font-size="16" font-family="sans-serif" text-anchor="middle"
+                letter-spacing="2">KM/H</text>
+            <text x="200" y="190" fill="#fff" font-size="56" font-family="monospace" font-weight="bold"
+                text-anchor="middle" id="svg-kmh">0</text>
+
+            <text x="200" y="240" fill="#aaa" font-size="14" font-family="sans-serif" text-anchor="middle"
+                letter-spacing="1">RPM</text>
+            <text x="200" y="270" fill="#ddd" font-size="28" font-family="monospace" text-anchor="middle"
+                id="svg-rpm">0</text>
+
+            <text x="200" y="320" fill="#888" font-size="12" font-family="sans-serif" text-anchor="middle"
+                letter-spacing="2">GEAR</text>
+            <text x="200" y="350" fill="#00cc44" font-size="23" font-family="sans-serif" font-weight="bold"
+                text-anchor="middle" id="svg-gear">N</text>
+
+            <!-- Markers -->
+            <path d="M 200 20 L 200 30 M 200 370 L 200 380 M 20 200 L 30 200 M 370 200 L 380 200" stroke="#fff"
+                stroke-width="2" opacity="0.3" />
+            <path
+                d="M 72.7 72.7 L 79.8 79.8 M 327.3 327.3 L 319.2 319.2 M 72.7 327.3 L 79.8 319.2 M 327.3 72.7 L 319.2 79.8"
+                stroke="#fff" stroke-width="2" opacity="0.15" />
+        </svg>
     </div>
 
     <div id="checkpoint-panel">
@@ -359,12 +510,29 @@
         window.addEventListener('keydown', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true; });
         window.addEventListener('keyup', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false; });
 
+        let raceStarted = false;
+        let modelsLoadedCount = 0;
+
+        function checkModelsLoaded() {
+            modelsLoadedCount++;
+            if (modelsLoadedCount >= 2) {
+                const startBtn = document.getElementById('start-btn');
+                startBtn.innerText = 'START RACE';
+                startBtn.disabled = false;
+                startBtn.onclick = () => {
+                    document.getElementById('start-screen').style.opacity = '0';
+                    setTimeout(() => document.getElementById('start-screen').style.display = 'none', 500);
+                    lapStartTime = Date.now();
+                    raceStarted = true;
+                };
+            }
+        }
+
         // 1. Carga del escenario (pista de carreras)
         const loader = new THREE.GLTFLoader();
         loader.load('race_track.glb', (gltf) => {
             const pista = gltf.scene;
 
-            // Recorrer el modelo para activar sombras
             pista.traverse((nodo) => {
                 if (nodo.isMesh) {
                     nodo.castShadow = true;
@@ -374,13 +542,13 @@
 
             scene.add(pista);
             console.log("¡Pista de carreras cargada!");
+            checkModelsLoaded();
         });
 
         // 2. Carga del coche independiente
         loader.load('lightning_mcqueen.glb', (gltf) => {
             const cocheMalla = gltf.scene;
 
-            // Activar sombras para el coche
             cocheMalla.traverse((nodo) => {
                 if (nodo.isMesh) {
                     nodo.castShadow = true;
@@ -388,29 +556,74 @@
                 }
             });
 
-            // Metemos a McQueen en nuestro grupo móvil
             grupoCoche.add(cocheMalla);
             cocheMalla.position.set(0, 0, 0);
-
-            // Corrección de orientación si fuera necesaria
             cocheMalla.rotation.y = Math.PI;
 
             console.log("¡Rayo McQueen independiente cargado y acoplado!");
+            checkModelsLoaded();
         });
 
         const panel = document.getElementById('checkpoint-panel');
         const cpTitle = document.getElementById('cp-title');
         const cpDesc = document.getElementById('cp-desc');
-        const kmhLabel = document.getElementById('kmh');
-        const coordsLabel = document.getElementById('coords');
+
+        // Referencias al Timing HUD
+        let lapCount = 1;
+        let lapStartTime = Date.now();
+        let bestLapTime = Infinity;
+        let sectorStates = [false, false, false, false];
+        const sectorColors = ['#00cc44', '#9933ff', '#ffcc00', '#ff1a1a']; // Verde, Morado, Amarillo, Rojo
+
+        const lapCountEl = document.getElementById('lap-count');
+        const currentTimeEl = document.getElementById('current-time');
+        const bestTimeEl = document.getElementById('best-time');
+        const sectorBars = [
+            document.getElementById('ui-sec-0'),
+            document.getElementById('ui-sec-1'),
+            document.getElementById('ui-sec-2'),
+            document.getElementById('ui-sec-3')
+        ];
+
+        function formatTime(ms) {
+            if (ms === Infinity) return "--:--.---";
+            const totalSeconds = ms / 1000;
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.floor(totalSeconds % 60);
+            const milliseconds = Math.floor((totalSeconds % 1) * 1000);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
+        }
+
+        // Referencias al HUD SVG
+        const svgKmh = document.getElementById('svg-kmh');
+        const svgRpm = document.getElementById('svg-rpm');
+        const svgGear = document.getElementById('svg-gear');
+        const svgThrottle = document.getElementById('svg-throttle');
+        const svgBrake = document.getElementById('svg-brake');
+        const svgSpeedRing = document.getElementById('svg-speed-ring');
+
+        let displayThrottle = 0;
+        let displayBrake = 0;
+
+        // Lógica de escalado Responsive del HUD
+        function resizeHUD() {
+            const hud = document.getElementById('hud-dashboard');
+            if (hud) {
+                let scaleFactor = window.innerHeight / 1000;
+                scaleFactor = Math.max(0.6, Math.min(scaleFactor, 1.3)); // Limitar escalado
+                hud.style.transform = `scale(${scaleFactor})`;
+            }
+        }
+        window.addEventListener('resize', resizeHUD);
+        resizeHUD();
 
         // --- 6. LOOP DE RENDIMIENTO ---
         function animate() {
             requestAnimationFrame(animate);
 
             // Aceleración con W/S
-            const acelerando = keys.w || keys.arrowup;
-            const frenando = keys.s || keys.arrowdown;
+            const acelerando = raceStarted && (keys.w || keys.arrowup);
+            const frenando = raceStarted && (keys.s || keys.arrowdown);
 
             if (acelerando) {
                 velocidadActual = THREE.MathUtils.lerp(velocidadActual, 0.002, 0.04);
@@ -423,18 +636,77 @@
                 progresoCircuito += velocidadActual;
             }
 
-            if (progresoCircuito > 1) progresoCircuito -= 1;
-            if (progresoCircuito < 0) progresoCircuito += 1;
+            // --- LÓGICA DE CRONOMETRAJE DE VUELTAS ---
+            if (raceStarted) {
+                const now = Date.now();
+                const currentLapMs = now - lapStartTime;
+                currentTimeEl.textContent = formatTime(currentLapMs);
 
-            kmhLabel.innerText = Math.round(Math.abs(velocidadActual) * 140000);
+                if (progresoCircuito >= 1) {
+                    progresoCircuito -= 1;
+                    
+                    // Chequeo anti-trampas: asegurar que se pasaron los 4 sectores
+                    const allSectorsVisited = sectorStates.every(state => state === true);
+                    
+                    if (allSectorsVisited) {
+                        // Vuelta completada válidamente
+                        if (currentLapMs < bestLapTime && currentLapMs > 5000) {
+                            bestLapTime = currentLapMs;
+                            bestTimeEl.textContent = formatTime(bestLapTime);
+                        }
+                        lapCount++;
+                        lapCountEl.textContent = lapCount;
+                        lapStartTime = now;
+    
+                        // Reiniciar colores de los sectores
+                        sectorStates = [false, false, false, false];
+                        sectorBars.forEach(bar => {
+                            bar.style.background = '#2a2a2a';
+                            bar.style.color = 'rgba(255,255,255,0.4)';
+                        });
+                    }
+                } else if (progresoCircuito < 0) {
+                    progresoCircuito += 1;
+                }
+            } else {
+                currentTimeEl.textContent = "0:00.000";
+            }
+
+            // Lógica de Telemetría Visual (SVG HUD)
+            const speedKMH = Math.round(Math.abs(velocidadActual) * 140000);
+            svgKmh.textContent = speedKMH;
+
+            // Simulación de RPM y Marcha
+            const rpm = Math.min(speedKMH * 38 + (speedKMH > 0 ? Math.random() * 100 : 0), 12000);
+            svgRpm.textContent = speedKMH === 0 ? "800" : Math.round(rpm);
+
+            let gear = "N";
+            if (speedKMH > 0 && speedKMH < 60) gear = "1";
+            else if (speedKMH >= 60 && speedKMH < 120) gear = "2";
+            else if (speedKMH >= 120 && speedKMH < 180) gear = "3";
+            else if (speedKMH >= 180 && speedKMH < 240) gear = "4";
+            else if (speedKMH >= 240) gear = "5";
+            svgGear.textContent = gear;
+            svgGear.style.fill = gear === "N" ? "#fff" : "#00cc44";
+
+            // Animación de barras circulares (suavizado)
+            const targetThrottle = acelerando ? 1 : 0;
+            const targetBrake = frenando ? 1 : 0;
+            displayThrottle = THREE.MathUtils.lerp(displayThrottle, targetThrottle, 0.2);
+            displayBrake = THREE.MathUtils.lerp(displayBrake, targetBrake, 0.2);
+
+            svgThrottle.style.strokeDashoffset = 293.2 - (293.2 * displayThrottle);
+            svgBrake.style.strokeDashoffset = 293.2 - (293.2 * displayBrake);
+
+            // Anillo exterior de velocidad (longitud 1131, tope visual en 300kmh)
+            const speedRatio = Math.min(speedKMH / 300, 1);
+            svgSpeedRing.style.strokeDashoffset = 1131 - (1131 * speedRatio);
 
             // Mover el contenedor por la curva
             if (grupoCoche && grupoCoche.children.length > 0) {
                 const posActual = trackCurve.getPointAt(progresoCircuito);
                 grupoCoche.position.copy(posActual);
 
-                // Actualizar contador de coordenadas
-                coordsLabel.innerHTML = `X: ${posActual.x.toFixed(2)}<br>Y: ${posActual.y.toFixed(2)}<br>Z: ${posActual.z.toFixed(2)}`;
 
                 let progresoAdelante = progresoCircuito + 0.003;
                 if (progresoAdelante > 1) {
@@ -471,12 +743,22 @@
 
         function verificarCheckpoints() {
             let enZona = false;
-            for (let cp of checkpoints) {
+            for (let i = 0; i < checkpoints.length; i++) {
+                let cp = checkpoints[i];
+
+                // Encender el sector permanentemente al entrar físicamente en la zona de la historia
+                // Validar que se enciendan cronológicamente
+                if (progresoCircuito >= cp.progresoMin && progresoCircuito <= cp.progresoMax && !sectorStates[i]) {
+                    if (i === 0 || sectorStates[i - 1] === true) {
+                        sectorStates[i] = true;
+                        const randomColor = sectorColors[Math.floor(Math.random() * sectorColors.length)];
+                        sectorBars[i].style.background = randomColor;
+                        sectorBars[i].style.color = '#fff';
+                    }
+                }
+
                 if (progresoCircuito >= cp.progresoMin && progresoCircuito <= cp.progresoMax) {
                     enZona = true;
-                    document.querySelectorAll('.sector').forEach(s => s.classList.remove('active'));
-                    document.getElementById(`sec-${cp.sector}`).classList.add('active');
-
                     if (!panel.classList.contains('visible')) {
                         cpTitle.innerText = cp.titulo;
                         cpDesc.innerText = cp.desc;

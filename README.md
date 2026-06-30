@@ -1,6 +1,5 @@
 # Lista de cosas por hacer (TODO)
 - [ ] Mejorar UI: Velocímetro y Sectores deben ser iguales a la F1
-- [ ] Checkpoints: Hacer los modelos de los checkpoints
 - [ ] Hacer una pantalla de inicio para que cargue el resto, en esta pantalla hacer un boton que diga play y explique los botones mientras de fondo se ve una cinematica del escenario
 - [ ] Cuando se abran las partes sobre mi mejorarlo, debe hacerse un pop-up que cubra un 80-90% de la pantalla (ancho y alto) con el contenido de pop-ups dinámicos que reemplaza los diálogos estáticos inyectando componentes HTML enriquecidos con imágenes, subtítulos y viñetas directamente en el script mediante template literals.
 - [ ] Mejorar el modelo 3d, agregar mar circundante o decoracion y un cielo, ya que se ve vacio más allá de mi modelo de racetrack
