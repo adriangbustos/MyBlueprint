@@ -407,10 +407,10 @@
         const skyMat = new THREE.ShaderMaterial({
             side: THREE.BackSide,
             uniforms: {
-                topColor:    { value: new THREE.Color(0x4eb8f0) },  // Celeste intenso arriba
+                topColor: { value: new THREE.Color(0x4eb8f0) },  // Celeste intenso arriba
                 bottomColor: { value: new THREE.Color(0xd0eeff) },  // Casi blanco en el horizonte
-                offset:      { value: 35 },
-                exponent:    { value: 0.6 }
+                offset: { value: 35 },
+                exponent: { value: 0.6 }
             },
             vertexShader: `
                 varying vec3 vWorldPosition;
@@ -448,13 +448,13 @@
             });
 
             const config = [
-                [0,   0,    0,    1.0],
-                [1.4, 0.3,  0.2,  0.75],
-                [-1.3,0.2, -0.1,  0.7],
-                [0.3, 0.55, 0.5,  0.6],
-                [-0.5,0.45,-0.6,  0.55],
-                [2.3, 0,    0.3,  0.5],
-                [-2.2,0,   -0.2,  0.48]
+                [0, 0, 0, 1.0],
+                [1.4, 0.3, 0.2, 0.75],
+                [-1.3, 0.2, -0.1, 0.7],
+                [0.3, 0.55, 0.5, 0.6],
+                [-0.5, 0.45, -0.6, 0.55],
+                [2.3, 0, 0.3, 0.5],
+                [-2.2, 0, -0.2, 0.48]
             ];
 
             config.forEach(([cx, cy, cz, r]) => {
@@ -472,18 +472,18 @@
         // Crear varias nubes distribuidas en el cielo
         const nubes = [];
         const configNubes = [
-            [ 30,  22, -60,  4.5],
-            [-50,  25,  20,  5.0],
-            [ 70,  20,  30,  3.8],
-            [-20,  28, -80,  6.0],
-            [ 10,  18,  90,  4.2],
-            [-80,  22,  60,  4.8],
-            [ 55,  30, -10,  3.5],
-            [-35,  26,  45,  5.5],
-            [ 90,  24, -45,  4.0],
-            [-65,  20, -30,  4.3],
-            [  0,  20,  50,  3.2],
-            [ 40,  27,  70,  5.2]
+            [30, 22, -60, 4.5],
+            [-50, 25, 20, 5.0],
+            [70, 20, 30, 3.8],
+            [-20, 28, -80, 6.0],
+            [10, 18, 90, 4.2],
+            [-80, 22, 60, 4.8],
+            [55, 30, -10, 3.5],
+            [-35, 26, 45, 5.5],
+            [90, 24, -45, 4.0],
+            [-65, 20, -30, 4.3],
+            [0, 20, 50, 3.2],
+            [40, 27, 70, 5.2]
         ];
 
         configNubes.forEach(([x, y, z, s]) => {
@@ -498,7 +498,7 @@
         const waterGeo = new THREE.PlaneGeometry(1200, 1200, 120, 120);
         const waterMat = new THREE.ShaderMaterial({
             uniforms: {
-                uTime:      { value: 0.0 },
+                uTime: { value: 0.0 },
                 uColorDeep: { value: new THREE.Color(0x3b9dc8) },  // Azul profundo
                 uColorShallow: { value: new THREE.Color(0x6cc8e8) } // Celeste agua
             },
@@ -752,10 +752,26 @@
         // Lógica de escalado Responsive del HUD
         function resizeHUD() {
             const hud = document.getElementById('hud-dashboard');
+            const timingHud = document.getElementById('timing-hud');
+
+            // Calcular factor de escala basado en dimensiones de la ventana (usando proporciones típicas de escritorio como base)
+            let widthFactor = window.innerWidth / 1280;
+            let heightFactor = window.innerHeight / 800;
+
+            // Tomamos el menor factor para asegurar que siempre quepa en pantalla
+            let scaleFactor = Math.min(widthFactor, heightFactor);
+
             if (hud) {
-                let scaleFactor = window.innerHeight / 1000;
-                scaleFactor = Math.max(0.6, Math.min(scaleFactor, 1.3)); // Limitar escalado
-                hud.style.transform = `scale(${scaleFactor})`;
+                // El velocímetro se achica más en pantallas pequeñas (min 0.4) y su tamaño máximo es 0.95
+                let hudScale = Math.max(0.4, Math.min(scaleFactor * 0.95, 0.95));
+                hud.style.transform = `scale(${hudScale})`;
+            }
+
+            if (timingHud) {
+                // El panel de vueltas ahora se escala desde la esquina superior izquierda
+                timingHud.style.transformOrigin = 'top left';
+                let timingScale = Math.max(0.65, Math.min(scaleFactor * 1.0, 1.0));
+                timingHud.style.transform = `scale(${timingScale})`;
             }
         }
         window.addEventListener('resize', resizeHUD);
@@ -770,8 +786,8 @@
             nubes.forEach((nube, i) => {
                 nube.position.x += 0.003 * (i % 2 === 0 ? 1 : -0.7);
                 // Wrap-around para que no se alejen demasiado
-                if (nube.position.x >  150) nube.position.x = -150;
-                if (nube.position.x < -150) nube.position.x =  150;
+                if (nube.position.x > 150) nube.position.x = -150;
+                if (nube.position.x < -150) nube.position.x = 150;
             });
             // Animar ondas del agua
             waterMat.uniforms.uTime.value += 0.016;
