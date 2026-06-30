@@ -416,7 +416,8 @@
         };
         controls.enabled = false; // Desactivado al inicio (el mouse no hace nada en modo seguir)
 
-        let modoCamaraLibre = false;
+        // 0: Fija (sigue atrás), 1: Libre (amarrada), 2: Dron (completamente libre)
+        let estadoCamara = 0;
 
         // --- 2. ILUMINACIÓN COMPLETA DE DÍA (SIN SECCIONES OSCURAS) ---
         // Luz ambiental: Ajustada al tone mapping
@@ -941,20 +942,24 @@
 
                 // Calculamos cuánto se movió el coche desde el último frame
                 const deltaPos = new THREE.Vector3().subVectors(posActual, controls.target);
-                // Actualizamos el target de los controles para que siempre mire al coche
-                controls.target.copy(posActual);
 
-                if (!modoCamaraLibre) {
+                if (estadoCamara !== 2) {
+                    // Actualizamos el target de los controles para que mire al coche (excepto en modo Dron)
+                    controls.target.copy(posActual);
+                }
+
+                if (estadoCamara === 0) {
                     // MODO SEGUIR FIJO: Sigue detrás del carro rígidamente (mouse bloqueado)
                     const direccion = new THREE.Vector3().subVectors(puntoAdelante, posActual).normalize();
                     camera.position.copy(posActual).addScaledVector(direccion, -distanciaDetras);
                     camera.position.y = posActual.y + alturaVision;
                     camera.lookAt(posActual);
-                } else {
-                    // MODO CÁMARA LIBRE AMARRADA:
-                    // Al sumar deltaPos, la cámara viaja junto al coche manteniendo la distancia y el ángulo relativo.
-                    // OrbitControls (configurado arriba) te permite rotar libremente arrastrando el click (estilo Roblox).
+                } else if (estadoCamara === 1) {
+                    // MODO CÁMARA LIBRE AMARRADA: La cámara viaja junto al coche.
                     camera.position.add(deltaPos);
+                    controls.update();
+                } else if (estadoCamara === 2) {
+                    // MODO DRON: La cámara está completamente libre para volar por el mapa.
                     controls.update();
                 }
             }
@@ -1007,17 +1012,31 @@
             }, 3000);
         }
 
-        // Cambiar el comportamiento del mouse entre Seguir y Orbitar amarrado
+        // Cambiar el comportamiento del mouse entre los distintos modos
         function toggleCamara() {
-            modoCamaraLibre = !modoCamaraLibre;
-            const btn = document.getElementById('cam-toggle');
+            estadoCamara = (estadoCamara + 1) % 2;
+            const timingHud = document.getElementById('timing-hud');
+            const hudDashboard = document.getElementById('hud-dashboard');
 
-            if (modoCamaraLibre) {
-                controls.enabled = true; // El mouse ahora puede rotar la cámara alrededor del coche
-                showToast("Cámara Libre: Arrastra el mouse para rotar");
+            if (estadoCamara === 1) {
+                controls.enabled = true;
+                controls.enablePan = false;
+                controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+                timingHud.style.visibility = 'visible';
+                hudDashboard.style.visibility = 'visible';
+                showToast("Cámara Libre: Arrastra el mouse para rotar alrededor del coche");
+                /*} else if (estadoCamara === 2) {
+                    controls.enabled = true;
+                    controls.enablePan = true;
+                    controls.mouseButtons.RIGHT = THREE.MOUSE.PAN; // Permite panear libremente
+                    timingHud.style.visibility = 'hidden';
+                    hudDashboard.style.visibility = 'hidden';
+                    showToast("Modo Dron: Interfaz oculta. Arrastra clic derecho para moverte libremente");*/
             } else {
-                controls.enabled = false; // Bloqueamos el mouse para la vista fija trasera
-                showToast("Cámara Fija: Siguiendo al coche rígidamente");
+                controls.enabled = false;
+                timingHud.style.visibility = 'visible';
+                hudDashboard.style.visibility = 'visible';
+                showToast("Cámara Fija: Vista rígida trasera");
             }
         }
 
