@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Adrián Garrido - Portfolio Analítico</title>
     <style>
         * {
@@ -163,8 +164,8 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            width: 320px;
-            height: 320px;
+            width: 280px;
+            height: 280px;
             z-index: 10;
             transform-origin: bottom right;
             transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -254,7 +255,7 @@
         <button id="start-btn" disabled>Cargando Modelos 3D...</button>
     </div>
 
-    <button id="cam-toggle" class="hud-element" onclick="toggleCamara()">Modo: Seguir Coche</button>
+    <button id="cam-toggle" class="hud-element" onclick="toggleCamara()"><i class='bx bxs-camera'></i></button>
 
     <div id="timing-hud">
         <div id="timing-lap">Lap <span id="lap-count">1</span></div>
@@ -774,7 +775,7 @@
 
             if (hud) {
                 // El velocímetro se achica más en pantallas pequeñas (min 0.4) y su tamaño máximo es 0.95
-                let hudScale = Math.max(0.4, Math.min(scaleFactor * 0.95, 0.95));
+                let hudScale = Math.max(0.55, Math.min(scaleFactor * 0.95, 0.95));
                 hud.style.transform = `scale(${hudScale})`;
             }
 
@@ -966,10 +967,8 @@
             const btn = document.getElementById('cam-toggle');
 
             if (modoCamaraLibre) {
-                btn.innerText = "Modo: Cámara Libre (Arrastra)";
                 controls.enabled = true; // El mouse ahora puede rotar la cámara alrededor del coche
             } else {
-                btn.innerText = "Modo: Seguir Coche";
                 controls.enabled = false; // Bloqueamos el mouse para la vista fija trasera
             }
         }
