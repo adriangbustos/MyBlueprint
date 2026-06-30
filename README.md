@@ -6,7 +6,7 @@ An interactive, low-poly 3D web application designed for US Admissions Officers.
 
 ## Details
 
-This portfolio is based entirely on who I am, what motivates me. I call it: ''The Why, not What''. It contains landmarks from my country, and key hints to my hobbies and likings. The panel resembles F1 games, while the car model is Lightning Mcqueen; making my likings very clear and straightforward.
+This portfolio is based entirely on who I am, what motivates me. I call it: ''The Why, not What''. It contains landmarks from my country, and key hints to my hobbies and likings. The HUD resembles F1 games, while the car model is Lightning Mcqueen; making my likings very clear, just to give some more information about me to admissions officers.
 
 ## 🛠️ Technical Architecture
 
