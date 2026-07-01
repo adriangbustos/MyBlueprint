@@ -474,10 +474,11 @@
                     <img src="s.svg" alt="S Key"> <span>Reverse</span>
                 </div>
                 <div class="control-item">
-                    <a href="https://www.linkedin.com/in/adriangbustos/" target="_blank" style="color: inherit;">
+                    <a href="https://www.linkedin.com/in/adriangbustos/" target="_blank"
+                        style="color: inherit; outline: none;">
                         <i style="font-size: 40px;" class='bx bxl-linkedin-square'></i>
                     </a>
-                    <a href="https://github.com/adriangbustos" target="_blank" style="color: inherit;">
+                    <a href="https://github.com/adriangbustos" target="_blank" style="color: inherit; outline: none;">
                         <i style="font-size: 40px;" class='bx bxl-github'></i>
                     </a>
                 </div>
@@ -592,7 +593,7 @@
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -749,7 +750,7 @@
         // --- PLANO DE AGUA OCEÁNICA ---
         // Cubre todo el espacio más allá del modelo; la niebla lo difumina en el horizonte
         const waterTime = { value: 0.0 };
-        const waterGeo = new THREE.PlaneGeometry(1200, 1200, 120, 120);
+        const waterGeo = new THREE.PlaneGeometry(1200, 1200, 32, 32);
         const waterMat = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0.0 },
@@ -789,7 +790,7 @@
         const waterMesh = new THREE.Mesh(waterGeo, waterMat);
         waterMesh.rotation.x = -Math.PI / 2;  // Plano horizontal
         waterMesh.position.y = 0.28;            // Nivel alineado con el agua estática del modelo
-        waterMesh.receiveShadow = true;
+        waterMesh.receiveShadow = false; // DESACTIVAR SOMBRAS AQUI PARA RENDIMIENTO
         scene.add(waterMesh);
 
         // --- 3. TRAZADO DE LA RUTA ---
