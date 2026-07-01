@@ -473,6 +473,14 @@
                 <div class="control-item">
                     <img src="s.svg" alt="S Key"> <span>Reverse</span>
                 </div>
+                <div class="control-item">
+                    <a href="https://www.linkedin.com/in/adriangbustos/" target="_blank" style="color: inherit;">
+                        <i style="font-size: 40px;" class='bx bxl-linkedin-square'></i>
+                    </a>
+                    <a href="https://github.com/adriangbustos" target="_blank" style="color: inherit;">
+                        <i style="font-size: 40px;" class='bx bxl-github'></i>
+                    </a>
+                </div>
             </div>
             <div class="action-section">
                 <div class="quote-text">
@@ -898,8 +906,8 @@
         let droneVelocity = new THREE.Vector3(0, 0, 0);
         const keys = { w: false, s: false, a: false, d: false, q: false, e: false, arrowup: false, arrowdown: false };
 
-        window.addEventListener('keydown', (e) => { 
-            if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true; 
+        window.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true;
             if (e.key.toLowerCase() === 'c') toggleCamara();
         });
         window.addEventListener('keyup', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false; });
@@ -1167,9 +1175,9 @@
                     const forward = new THREE.Vector3();
                     camera.getWorldDirection(forward);
                     const right = new THREE.Vector3().crossVectors(forward, camera.up).normalize();
-                    
-                    const acceleration = 0.04; 
-                    const maxSpeed = 1.2; 
+
+                    const acceleration = 0.04;
+                    const maxSpeed = 1.2;
                     const friction = 0.92;
 
                     const moveDir = new THREE.Vector3(0, 0, 0);
@@ -1194,7 +1202,7 @@
 
                     camera.position.add(droneVelocity);
                     controls.target.add(droneVelocity);
-                    
+
                     controls.update();
                 }
             }
