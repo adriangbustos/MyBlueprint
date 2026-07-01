@@ -579,6 +579,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
     <script>
@@ -932,6 +933,8 @@
         }
 
         // 1. Carga del escenario (pista de carreras)
+        // --- MÉTODO ANTIGUO SIN DRACO (comentado por seguridad) ---
+        /*
         const loader = new THREE.GLTFLoader();
         loader.load('race_track.glb', (gltf) => {
             const pista = gltf.scene;
@@ -945,6 +948,30 @@
 
             scene.add(pista);
             console.log("¡Pista de carreras cargada!");
+            checkModelsLoaded();
+        });
+        */
+
+        // --- NUEVO MÉTODO CON DRACO COMPRESSION ---
+        const loader = new THREE.GLTFLoader();
+
+        // Configurar el decodificador DRACO (¡el /gltf/ al final es vital!)
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/');
+        loader.setDRACOLoader(dracoLoader);
+
+        loader.load('race_track-v1.glb', (gltf) => {
+            const pista = gltf.scene;
+
+            pista.traverse((nodo) => {
+                if (nodo.isMesh) {
+                    nodo.castShadow = false; // Sin sombras en la pista optimiza aún más
+                    nodo.receiveShadow = false;
+                }
+            });
+
+            scene.add(pista);
+            console.log("¡Pista de carreras cargada con DRACO!");
             checkModelsLoaded();
         });
 
