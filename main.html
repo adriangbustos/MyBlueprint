@@ -68,7 +68,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #ffffff;
+            background: #000000;
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -77,7 +77,7 @@
             /* Uses more horizontal space */
             transition: opacity 0.5s;
             font-family: 'EB Garamond', serif;
-            color: #222;
+            color: #ffffff;
         }
 
         .video-bg-container {
@@ -88,14 +88,26 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            background: #ffffff;
+            background: #000000;
+        }
+
+        .video-bg-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            /* Overlay oscuro */
+            z-index: 1;
+            pointer-events: none;
         }
 
         .bg-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.8;
         }
 
         .start-top {
@@ -187,7 +199,8 @@
             text-align: center;
             font-size: 1.5vw;
             line-height: 1.4;
-            color: #555;
+            color: #dcdcdc;
+            /* Color claro para la cita */
         }
 
         #start-btn {
@@ -445,7 +458,9 @@
     <!-- START SCREEN -->
     <div id="start-screen">
         <div class="video-bg-container">
-            <!-- <video autoplay loop muted playsinline class="bg-video"><source src="your-video.mp4" type="video/mp4"></video> -->
+            <video autoplay loop muted playsinline preload="auto" class="bg-video">
+                <source src="videobackground.mp4" type="video/mp4">
+            </video>
         </div>
 
         <div class="start-top">
@@ -960,7 +975,7 @@
         dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/');
         loader.setDRACOLoader(dracoLoader);
 
-        loader.load('race_track-v1.glb', (gltf) => {
+        loader.load('race_track.glb', (gltf) => {
             const pista = gltf.scene;
 
             pista.traverse((nodo) => {
@@ -1236,7 +1251,12 @@
             }
 
             verificarCheckpoints();
-            renderer.render(scene, camera);
+
+            // Only render the heavy 3D scene if the race has actually started.
+            // This prevents the GPU from being overworked while the start screen (with the video) is visible.
+            if (raceStarted) {
+                renderer.render(scene, camera);
+            }
         }
 
         function verificarCheckpoints() {
@@ -1299,7 +1319,7 @@
                 timingHud.style.visibility = 'visible';
                 hudDashboard.style.visibility = 'visible';
                 camToggleBtn.style.visibility = 'visible';
-                showToast("Cámara Libre: Arrastra el mouse para rotar alrededor del coche");
+                showToast("Free Camera: Drag the mouse to rotate around the car.");
             } else if (estadoCamara === 2) {
                 controls.enabled = true;
                 controls.enablePan = true;
@@ -1314,14 +1334,14 @@
                 camera.getWorldDirection(forward);
                 controls.target.copy(camera.position).addScaledVector(forward, 10);
                 droneVelocity.set(0, 0, 0); // Resetear inercia al entrar
-                showToast("Modo Dron: WASD mover, Q/E bajar/subir, Clic rotar");
+                showToast("Drone Mode: WASD to move, Q/E to lower/raise, click to rotate.");
             } else {
                 controls.enabled = false;
                 controls.maxPolarAngle = Math.PI / 2 - 0.05;
                 timingHud.style.visibility = 'visible';
                 hudDashboard.style.visibility = 'visible';
                 camToggleBtn.style.visibility = 'visible';
-                showToast("Cámara Fija: Vista rígida trasera");
+                showToast("Fixed Camera: Static rear view");
             }
         }
 
