@@ -14,3 +14,4 @@
 2026-07-02T18:44:16 | refactor: optimize track sector render loop
 2026-07-07T11:59:19 | chore: clean up telemetry debug logs
 2026-07-07T15:06:37 | fix: adjust timing calculation on checkpoint trigger
+2026-07-14T20:44:53 | perf: throttle telemetry event broadcast frequency
