@@ -17,3 +17,4 @@
 2026-07-14T20:44:53 | perf: throttle telemetry event broadcast frequency
 2026-07-14T21:15:06 | docs: update track configuration parameters in README
 2026-07-14T22:12:04 | refactor: optimize track sector render loop
+2026-07-22T16:34:27 | perf: throttle telemetry event broadcast frequency
