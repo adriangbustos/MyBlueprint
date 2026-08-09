@@ -22,3 +22,4 @@
 2026-07-28T16:00:54 | perf: throttle telemetry event broadcast frequency
 2026-08-05T17:23:40 | fix: adjust timing calculation on checkpoint trigger
 2026-08-09T17:11:46 | chore: clean up telemetry debug logs
+2026-08-09T19:41:17 | perf: throttle telemetry event broadcast frequency
