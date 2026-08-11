@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>🏎️ Adrián Garrido - College Portfolio</h1>
-  <p><i>An interactive, low-poly 3D web application designed for US Admissions Officers.</i></p>
+  <h1>🏎️ Adrián Garrido - MyBlueprint</h1>
+  <p><i>An interactive, low-poly 3D web application designed for Admissions Officers.</i></p>
   
   <a href="https://agb-blueprint.netlify.app/">
     <img src="https://img.shields.io/badge/LIVE%20DEMO-ACCESS%20PLATFORM-0088cc?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo on Netlify" />
@@ -28,13 +28,6 @@ Utilizing a racing telemetry metaphor, the project presents deep intellectual in
 This portfolio is based entirely on who I am and what motivates me. 
 It contains landmarks from my country and key hints to my hobbies and likings. The HUD resembles F1 games, while the car model is Lightning McQueen—making my passions very clear to give admissions officers a more authentic glimpse into who I am beyond the paper.
 
-## 🛠️ Technical Architecture
-
-* ![Three.js](https://img.shields.io/badge/Three.js-black?style=flat-square&logo=three.js&logoColor=white) **Engine:** Three.js (Vanilla JS) optimized for real-time 3D rendering of unified low-poly assets.
-* ⌨️ **Controls & Navigation:** Constraint-based spline mechanics (`CatmullRomCurve3`) tied exclusively to `W/S` or Arrow keys to guarantee zero-friction exploration.
-* 🎥 **Cinematics & UX:** Dual-camera matrix supporting an automated Third-Person Follow Mode, an interactive Orbit Inspection Mode, and a hidden Free Drone Mode.
-* 📊 **Frontend UI:** High-contrast responsive HUD overlay rendering simulated speed metrics, lap tracking, and dynamic modal panels for content delivery.
-
 ## 🚀 Technologies Used
 
 <div align="center">
@@ -43,3 +36,10 @@ It contains landmarks from my country and key hints to my hobbies and likings. T
   <img src="https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript" />
   <img src="https://img.shields.io/badge/Three.js-black?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
 </div>
+
+## 🛠️ Technical Architecture
+
+* ![Three.js](https://img.shields.io/badge/Three.js-black?style=flat-square&logo=three.js&logoColor=white) **Engine:** Three.js (Vanilla JS) optimized for real-time 3D rendering of unified low-poly assets.
+* ⌨️ **Controls & Navigation:** Constraint-based spline mechanics (`CatmullRomCurve3`) tied exclusively to `W/S` or Arrow keys to guarantee zero-friction exploration.
+* 🎥 **Cinematics & UX:** Dual-camera matrix supporting an automated Third-Person Follow Mode, an interactive Orbit Inspection Mode, and a hidden Free Drone Mode.
+* 📊 **Frontend UI:** High-contrast responsive HUD overlay rendering simulated speed metrics, lap tracking, and dynamic modal panels for content delivery.
