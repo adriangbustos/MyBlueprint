@@ -381,22 +381,34 @@
             filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.2));
         }
 
-        #cam-toggle {
-            top: 20px;
-            right: 20px;
+        #cam-toggle,
+        #home-btn {
             cursor: pointer;
             background-color: #232222;
             color: white;
             border: none;
-            font-weight: bold;
-            font-size: 12px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(85, 82, 82, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            padding: 0;
         }
 
-        #cam-toggle:hover {
+        #cam-toggle {
+            top: 20px;
+            right: 20px;
+        }
+
+        #home-btn {
+            bottom: 20px;
+            left: 20px;
+        }
+
+        #cam-toggle:hover,
+        #home-btn:hover {
             background-color: #181717;
             box-shadow: 0 6px 20px rgba(85, 82, 82, 0.5);
         }
@@ -459,7 +471,7 @@
     <div id="start-screen">
         <div class="video-bg-container">
             <video autoplay loop muted playsinline preload="auto" class="bg-video">
-                <source src="videobackground.mp4" type="video/mp4">
+                <source src="assets/videos/videobackground.mp4" type="video/mp4">
             </video>
         </div>
 
@@ -470,7 +482,7 @@
                 <div class="header-sub-italic">That makes me act</div>
             </div>
             <div class="start-character">
-                <img src="character+text.svg" alt="Character Hello">
+                <img src="assets/images/character+text.svg" alt="Character Hello">
             </div>
         </div>
 
@@ -483,10 +495,10 @@
         <div class="start-bottom">
             <div class="controls-section">
                 <div class="control-item">
-                    <img src="w.svg" alt="W Key"> <span>Drive</span>
+                    <img src="assets/images/w.svg" alt="W Key"> <span>Drive</span>
                 </div>
                 <div class="control-item">
-                    <img src="s.svg" alt="S Key"> <span>Reverse</span>
+                    <img src="assets/images/s.svg" alt="S Key"> <span>Reverse</span>
                 </div>
                 <div class="control-item">
                     <a href="https://www.linkedin.com/in/adriangbustos/" target="_blank"
@@ -510,6 +522,9 @@
     </div>
 
     <button id="cam-toggle" class="hud-element" onclick="toggleCamara()"><i class='bx bxs-camera'
+            style="font-size: 3vh;"></i></button>
+
+    <button id="home-btn" class="hud-element" onclick="returnToMenu()"><i class='bx bxs-home'
             style="font-size: 3vh;"></i></button>
 
     <div id="timing-hud">
@@ -926,6 +941,7 @@
         window.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true;
             if (e.key.toLowerCase() === 'c') toggleCamara();
+            if (e.key === '/') toggleDrone();
         });
         window.addEventListener('keyup', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false; });
 
@@ -951,7 +967,7 @@
         // --- MÉTODO ANTIGUO SIN DRACO (comentado por seguridad) ---
         /*
         const loader = new THREE.GLTFLoader();
-        loader.load('race_track.glb', (gltf) => {
+        loader.load('assets/models/race_track.glb', (gltf) => {
             const pista = gltf.scene;
 
             pista.traverse((nodo) => {
@@ -975,7 +991,7 @@
         dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/');
         loader.setDRACOLoader(dracoLoader);
 
-        loader.load('race_track.glb', (gltf) => {
+        loader.load('assets/models/race_track.glb', (gltf) => {
             const pista = gltf.scene;
 
             pista.traverse((nodo) => {
@@ -991,7 +1007,7 @@
         });
 
         // 2. Carga del coche independiente
-        loader.load('lightning_mcqueen.glb', (gltf) => {
+        loader.load('assets/models/lightning_mcqueen.glb', (gltf) => {
             const cocheMalla = gltf.scene;
 
             cocheMalla.traverse((nodo) => {
@@ -1305,10 +1321,11 @@
 
         // Cambiar el comportamiento del mouse entre los distintos modos
         function toggleCamara() {
-            estadoCamara = (estadoCamara + 1) % 3;
+            estadoCamara = (estadoCamara + 1) % 2;
             const timingHud = document.getElementById('timing-hud');
             const hudDashboard = document.getElementById('hud-dashboard');
             const camToggleBtn = document.getElementById('cam-toggle');
+            const homeBtn = document.getElementById('home-btn');
 
             if (estadoCamara === 1) {
                 controls.enabled = true;
@@ -1319,8 +1336,27 @@
                 timingHud.style.visibility = 'visible';
                 hudDashboard.style.visibility = 'visible';
                 camToggleBtn.style.visibility = 'visible';
+                if (homeBtn) homeBtn.style.visibility = 'visible';
                 showToast("Free Camera: Drag the mouse to rotate around the car.");
-            } else if (estadoCamara === 2) {
+            } else {
+                controls.enabled = false;
+                controls.maxPolarAngle = Math.PI / 2 - 0.05;
+                timingHud.style.visibility = 'visible';
+                hudDashboard.style.visibility = 'visible';
+                camToggleBtn.style.visibility = 'visible';
+                if (homeBtn) homeBtn.style.visibility = 'visible';
+                showToast("Fixed Camera: Static rear view");
+            }
+        }
+
+        function toggleDrone() {
+            const timingHud = document.getElementById('timing-hud');
+            const hudDashboard = document.getElementById('hud-dashboard');
+            const camToggleBtn = document.getElementById('cam-toggle');
+            const homeBtn = document.getElementById('home-btn');
+
+            if (estadoCamara !== 2) {
+                estadoCamara = 2;
                 controls.enabled = true;
                 controls.enablePan = true;
                 controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
@@ -1329,20 +1365,33 @@
                 timingHud.style.visibility = 'hidden';
                 hudDashboard.style.visibility = 'hidden';
                 camToggleBtn.style.visibility = 'hidden';
+                if (homeBtn) homeBtn.style.visibility = 'hidden';
                 // Centrar target un poco al frente para que gire natural
                 const forward = new THREE.Vector3();
                 camera.getWorldDirection(forward);
                 controls.target.copy(camera.position).addScaledVector(forward, 10);
                 droneVelocity.set(0, 0, 0); // Resetear inercia al entrar
-                showToast("Drone Mode: WASD to move, Q/E to lower/raise, click to rotate.");
+                showToast("Drone Mode: WASD to move, Q/E to lower/raise, click to rotate. Press '/' to exit.");
             } else {
+                // Return to mode 0
+                estadoCamara = 0;
                 controls.enabled = false;
                 controls.maxPolarAngle = Math.PI / 2 - 0.05;
                 timingHud.style.visibility = 'visible';
                 hudDashboard.style.visibility = 'visible';
                 camToggleBtn.style.visibility = 'visible';
+                if (homeBtn) homeBtn.style.visibility = 'visible';
                 showToast("Fixed Camera: Static rear view");
             }
+        }
+
+        function returnToMenu() {
+            const startScreen = document.getElementById('start-screen');
+            startScreen.style.display = 'flex';
+            setTimeout(() => {
+                startScreen.style.opacity = '1';
+            }, 10);
+            raceStarted = false;
         }
 
         window.addEventListener('resize', () => {
