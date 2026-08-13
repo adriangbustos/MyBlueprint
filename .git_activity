@@ -24,3 +24,4 @@
 2026-08-09T17:11:46 | chore: clean up telemetry debug logs
 2026-08-09T19:41:17 | perf: throttle telemetry event broadcast frequency
 2026-08-13T16:54:15 | refactor: optimize track sector render loop
+2026-08-13T18:27:52 | docs: update track configuration parameters in README
