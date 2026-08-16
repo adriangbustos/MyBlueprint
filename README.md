@@ -1,6 +1,6 @@
 <div align="center">
   <h1>🏎️ Adrián Garrido - MyBlueprint</h1>
-  <p><i>An interactive, low-poly 3D web application designed for Admissions Officers.</i></p>
+  <p><i>An interactive, low-poly 3D web application designed for College Admissions.</i></p>
   
   <a href="https://agb-blueprint.netlify.app/">
     <img src="https://img.shields.io/badge/LIVE%20DEMO-ACCESS%20PLATFORM-0088cc?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo on Netlify" />
