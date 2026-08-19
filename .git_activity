@@ -27,3 +27,4 @@
 2026-08-13T18:27:52 | docs: update track configuration parameters in README
 2026-08-13T22:37:17 | fix: adjust timing calculation on checkpoint trigger
 2026-08-19T18:36:39 | refactor: optimize track sector render loop
+2026-08-19T21:24:21 | fix: adjust timing calculation on checkpoint trigger
