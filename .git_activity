@@ -34,3 +34,4 @@
 2026-09-04T19:00:33 | fix: adjust timing calculation on checkpoint trigger
 2026-09-10T19:48:15 | refactor: optimize track sector render loop
 2026-09-10T22:30:41 | perf: throttle telemetry event broadcast frequency
+2026-09-10T22:31:28 | docs: update track configuration parameters in README
