@@ -36,3 +36,4 @@
 2026-09-10T22:30:41 | perf: throttle telemetry event broadcast frequency
 2026-09-10T22:31:28 | docs: update track configuration parameters in README
 2026-09-17T15:42:37 | docs: update track configuration parameters in README
+2026-09-17T17:44:15 | fix: adjust timing calculation on checkpoint trigger
