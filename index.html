@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -17,6 +17,7 @@
         }
 
         body {
+            overscroll-behavior: none;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
             background-color: #f0f4f8;
@@ -24,8 +25,8 @@
             color: #111;
         }
 
-        button:focus {
-            outline: none !important;
+        button:focus:not(:focus-visible) {
+            outline: none;
         }
 
         #toast-message {
@@ -165,15 +166,17 @@
         }
 
         .start-bottom {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: flex-end;
+            width: 100%;
         }
 
         .controls-section {
             display: flex;
             flex-direction: column;
             gap: 1.5vh;
+            align-items: flex-start;
         }
 
         .control-item {
@@ -197,39 +200,65 @@
 
         .quote-text {
             font-style: italic;
-            text-align: center;
-            font-size: 1.5vw;
+            text-align: left;
+            font-size: 1.3vw;
             line-height: 1.4;
             color: #dcdcdc;
-            /* Color claro para la cita */
+            margin-top: 1vh;
         }
 
-        #start-btn {
-            padding: 12px 40px;
-            font-size: 2.5vw;
+        #start-btn,
+        #drive-btn {
+            padding: 10px 24px;
+            font-size: 1.6vw;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
             cursor: pointer;
             background: #d83a3a;
             color: white;
-            border: 4px solid #222;
-            box-shadow: 6px 6px 0px #222;
+            border: 3px solid #222;
+            box-shadow: 4px 4px 0px #222;
             transition: all ease 0.1s;
             text-transform: uppercase;
         }
 
-        #start-btn:active {
+        #start-btn {
+            background: #222;
+            border-color: #fff;
+            box-shadow: 4px 4px 0px #fff;
+        }
+
+        #start-btn:active,
+        #drive-btn:active {
             transform: translate(3px, 3px);
             box-shadow: 3px 3px 0px #222;
         }
 
-        #start-btn:disabled {
+        #start-btn:disabled,
+        #drive-btn:disabled {
             background: #888;
             cursor: not-allowed;
-            box-shadow: 6px 6px 0px #555;
+            box-shadow: 4px 4px 0px #555;
         }
 
         @media (max-width: 768px) {
+            .start-bottom {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4vh;
+            }
+
+            .controls-section {
+                align-items: center;
+            }
+
+            .quote-text {
+                text-align: center;
+                font-size: 3.5vw;
+                margin-top: 1vh;
+            }
+
             .header-main {
                 font-size: 9vw;
             }
@@ -240,8 +269,11 @@
             }
 
             .start-center {
-                font-size: 3.5vw;
+                font-size: clamp(15px, 4vw, 24px);
                 max-width: 95%;
+                position: static;
+                transform: none;
+                margin: 4vh auto;
             }
 
             .control-item {
@@ -256,8 +288,37 @@
                 font-size: 3vw;
             }
 
-            #start-btn {
-                font-size: 5vw;
+            #start-btn,
+            #drive-btn {
+                font-size: 4.5vw;
+                padding: 10px 18px;
+                border: 3px solid #222;
+                box-shadow: 4px 4px 0px #222;
+            }
+
+            #timing-hud {
+                width: calc(100vw - 40px);
+                max-width: 350px;
+            }
+
+            #timing-lap {
+                border-bottom: none;
+            }
+
+            #timing-times {
+                padding: 4px 10px;
+            }
+
+            #timing-times .time-divider,
+            #timing-times .time-block:last-child {
+                display: none;
+            }
+
+            #home-btn {
+                bottom: auto !important;
+                top: 20px !important;
+                left: auto !important;
+                right: 80px !important;
             }
 
             .start-character img {
@@ -411,8 +472,8 @@
         }
 
         #home-btn {
-            bottom: 20px;
-            left: 20px;
+            top: 80px;
+            right: 20px;
         }
 
         #cam-toggle:hover,
@@ -465,7 +526,7 @@
             box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
             color: #E8EAED;
             transition: opacity 200ms ease-out, transform 200ms ease-out;
-            text-align: justify;
+            text-align: left;
         }
 
         /* 3px Accent bar across top */
@@ -518,6 +579,7 @@
         }
 
         #cp-scroll-body {
+            overscroll-behavior: none;
             overflow-y: auto;
             flex: 1;
             padding: 0;
@@ -606,9 +668,46 @@
             padding: 16px 32px 20px;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             background: rgba(16, 18, 22, 0.98);
+        }
+
+        .cp-nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #cp-step-indicator {
+            font-size: 14px;
+            font-weight: 600;
+            color: #bdc1c6;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #cp-prev-btn,
+        #cp-next-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 150ms;
+        }
+
+        #cp-prev-btn:hover,
+        #cp-next-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #cp-prev-btn:focus-visible,
+        #cp-next-btn:focus-visible {
+            outline: 2px solid var(--sector-accent);
+            outline-offset: 2px;
         }
 
         #cp-continue-btn {
@@ -674,9 +773,13 @@
             .cp-footer {
                 padding: 14px 20px max(20px, env(safe-area-inset-bottom));
                 flex-direction: column;
-                gap: 0;
+                gap: 16px;
             }
 
+            .cp-nav {
+                width: 100%;
+                justify-content: space-between;
+            }
 
             #cp-continue-btn {
                 width: 100%;
@@ -691,6 +794,64 @@
             #checkpoint-panel,
             #checkpoint-overlay {
                 transition: none !important;
+            }
+        }
+
+        .sector-bar {
+            border: none;
+            font-family: inherit;
+        }
+
+        @media (pointer: coarse) {
+            #timing-sectors {
+                height: auto;
+            }
+
+            .sector-bar {
+                min-height: 40px;
+            }
+        }
+
+        .cp-pull-quote cite {
+            display: block;
+            margin-top: 8px;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            color: #9aa0a6;
+        }
+
+        button {
+            touch-action: manipulation;
+        }
+
+        @media (max-width: 768px) {
+            #cp-img-container {
+                max-height: 150px;
+            }
+
+            #checkpoint-panel {
+                height: 85vh;
+                height: 85dvh;
+            }
+        }
+
+        @media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
+            #checkpoint-panel {
+                top: 50%;
+                bottom: auto;
+                transform: translate(-50%, calc(-50% + 12px));
+                height: 95vh;
+                max-height: 95vh;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-left: 1px solid rgba(255, 255, 255, 0.12);
+                border-right: 1px solid rgba(255, 255, 255, 0.12);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            }
+
+            #checkpoint-panel.visible {
+                transform: translate(-50%, -50%);
             }
         }
     </style>
@@ -718,9 +879,9 @@
         </div>
 
         <div class="start-center">
-            <p>While my achievements reflect my past experiences, they often fail to capture the complete</p>
-            <p>narrative. I created this web to express the deeper motivations, curiosity, and purpose that</p>
-            <p>genuinely inspire my work each day.</p>
+            <p>While my achievements reflect my past experiences, they often fail to capture the complete narrative. I
+                created this site to express the deeper motivations, curiosity, and purpose that genuinely inspire my
+                work each day.</p>
         </div>
 
         <div class="start-bottom">
@@ -731,7 +892,7 @@
                 <div class="control-item">
                     <img src="assets/images/s.svg" alt="S Key"> <span>Reverse</span>
                 </div>
-                <div class="control-item">
+                <div class="social-links" style="display: flex; gap: 1vw; align-items: center; margin-top: 1vh;">
                     <a href="https://www.linkedin.com/in/adriangbustos/" target="_blank"
                         style="color: inherit; outline: none;">
                         <i style="font-size: 40px;" class='bx bxl-linkedin-square'></i>
@@ -742,12 +903,27 @@
                 </div>
             </div>
             <div class="action-section">
-                <div class="quote-text">
+                <div class="start-buttons"
+                    style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px;">
+                    <button id="start-btn" disabled>LOADING</button>
+                    <button id="drive-btn" disabled style="display: none;">LOADING</button>
+                </div>
+                <noscript>
+                    <p style="color:#fff;text-align:center;font-family:Inter,sans-serif;margin-top:12px;font-size:16px">
+                        JavaScript is disabled. <a href="stories.html" style="color:#fff">Read the four stories
+                            instead</a></p>
+                </noscript>
+                <p style="color:#fff;text-align:center;font-family:Inter,sans-serif;margin-top:12px;font-size:16px"><a
+                        href="stories.html" style="color:#fff">Prefer to just read? Open the four stories as a plain
+                        page.</a></p>
+            </div>
+            <div class="quote-section"
+                style="display: flex; justify-content: flex-end; align-items: flex-end; padding-bottom: 30px;">
+                <div class="quote-text" style="text-align: center; margin-top: 0;">
                     "Dear Admissions Officer,<br>
                     thank you for taking the time<br>
                     to review this."
                 </div>
-                <button id="start-btn" disabled>LOADING</button>
             </div>
         </div>
     </div>
@@ -772,10 +948,10 @@
             </div>
         </div>
         <div id="timing-sectors">
-            <div class="sector-bar" id="ui-sec-0">S1</div>
-            <div class="sector-bar" id="ui-sec-1">S2</div>
-            <div class="sector-bar" id="ui-sec-2">S3</div>
-            <div class="sector-bar" id="ui-sec-3">S4</div>
+            <button class="sector-bar" id="ui-sec-0" aria-label="Open story 1: The Cost of Potential">S1</button>
+            <button class="sector-bar" id="ui-sec-1" aria-label="Open story 2: Mind and Hand">S2</button>
+            <button class="sector-bar" id="ui-sec-2" aria-label="Open story 3: Community Code">S3</button>
+            <button class="sector-bar" id="ui-sec-3" aria-label="Open story 4: Paper & Verse">S4</button>
         </div>
     </div>
 
@@ -841,7 +1017,40 @@
             </div>
         </div>
         <div class="cp-footer">
-            <button id="cp-continue-btn" onclick="closeSectorModal()">Continue</button>
+            <div class="cp-nav">
+                <button id="cp-prev-btn" aria-label="Previous story">Prev</button>
+                <span id="cp-step-indicator">1 / 4</span>
+                <button id="cp-next-btn" aria-label="Next story">Next</button>
+            </div>
+            <button id="cp-continue-btn">Continue</button>
+        </div>
+    </div>
+
+    <button id="take-wheel-btn"
+        style="display: none; position: fixed; bottom: 20px; left: 20px; z-index: 10; padding: 10px 16px; background: rgba(0,0,0,0.8); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; font-weight: bold; cursor: pointer;">Take
+        the wheel</button>
+
+    <div id="touch-controls" style="display: none;">
+        <button id="touch-rev"
+            style="position: fixed; left: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #ff1a1a; font-weight: bold; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; user-select: none;">REV</button>
+        <button id="touch-gas"
+            style="position: fixed; right: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #00cc44; font-weight: bold; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; user-select: none;">GAS</button>
+        <div id="touch-speed"
+            style="position: fixed; right: 20px; bottom: calc(max(20px, env(safe-area-inset-bottom)) + 86px); background: rgba(20,20,20,0.9); color: white; padding: 4px 12px; border-radius: 12px; font-family: monospace; font-size: 16px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); z-index: 10;">
+            0 KM/H</div>
+    </div>
+
+    <div id="tour-complete-card"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(16,18,22,0.95); padding: 30px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); color: white; z-index: 50; flex-direction: column; gap: 16px; align-items: center; text-align: center; max-width: 90vw;">
+        <h3 style="margin: 0; font-size: 20px;">Tour complete.</h3>
+        <p style="margin: 0; font-size: 16px; color: #E8EAED;">Keep exploring or read the plain page.</p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 10px;">
+            <button id="keep-exploring-btn"
+                style="padding: 10px 20px; background: white; color: black; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">Keep
+                exploring</button>
+            <a href="stories.html"
+                style="padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 6px; text-decoration: none; font-weight: bold;">Read
+                stories</a>
         </div>
     </div>
 
@@ -856,7 +1065,61 @@
 
     <script>
         // --- 1. CONFIGURACIÓN DE ESCENA (FANDO CLARO DE DÍA) ---
+        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+        let tourMode = isTouchDevice;
+        let tourFinished = false;
+        let pausedAt = 0;
+
+        if (isTouchDevice) {
+            document.addEventListener("DOMContentLoaded", () => {
+                const items = document.querySelectorAll('.control-item');
+                if (items[0]) items[0].style.display = 'none';
+                if (items[1]) items[1].style.display = 'none';
+            });
+        }
+        const shownThisLap = [false, false, false, false];
+        let lastFocus = null;
+
+        function clearKeys() { for (const k in keys) keys[k] = false; }
+
+        function bind(id, evt, fn) {
+            if (id === 'window') {
+                window.addEventListener(evt, fn);
+                return;
+            }
+            const el = document.getElementById(id);
+            if (el) el.addEventListener(evt, fn); else console.warn('Missing element: ' + id);
+        }
+
+        function showWebGLFailure(message) {
+            const btn = document.getElementById('start-btn');
+            if (btn) { btn.innerText = 'UNAVAILABLE'; btn.disabled = true; }
+            let note = document.getElementById('load-error');
+            if (!note) {
+                note = document.createElement('p');
+                note.id = 'load-error';
+                note.style.cssText = 'color:#fff;text-align:center;font-family:Inter,sans-serif;margin-top:12px;font-size:16px';
+                const host = document.querySelector('.action-section');
+                if (host) host.appendChild(note);
+            }
+            note.innerHTML = (message || 'The 3D scene could not load.') + ' <a href="stories.html" style="color:#fff">Read the four stories instead</a>';
+        }
+
+        function checkWebGLSupport() {
+            try {
+                const canvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+            } catch (e) {
+                return false;
+            }
+        }
+
         const container = document.getElementById('canvas-container');
+
+        if (!checkWebGLSupport()) {
+            showWebGLFailure('Your browser could not start 3D graphics.');
+            throw new Error('WebGL unavailable');
+        }
         const scene = new THREE.Scene();
         // El fondo lo maneja el skybox shader — no usamos scene.background sólido
         // scene.background = new THREE.Color(0xf0f4f8);
@@ -868,7 +1131,7 @@
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
         // --- NUEVO: CONFIGURACIÓN DE COLOR Y TONE MAPPING ---
         renderer.outputEncoding = THREE.sRGBEncoding; // Colores vivos y correctos
@@ -912,10 +1175,10 @@
 
         // Configuración de sombras del Sol
         sunLight1.castShadow = true;
-        sunLight1.shadow.mapSize.width = 2048; // Alta resolución para sombras nítidas
-        sunLight1.shadow.mapSize.height = 2048;
+        sunLight1.shadow.mapSize.width = 1024; // Alta resolución para sombras nítidas
+        sunLight1.shadow.mapSize.height = 1024;
         sunLight1.shadow.camera.near = 0.5;
-        sunLight1.shadow.camera.far = 150;
+        sunLight1.shadow.camera.far = 50;
         const d = 60; // Área que cubre la cámara de sombras ortográfica
         sunLight1.shadow.camera.left = -d;
         sunLight1.shadow.camera.right = d;
@@ -1159,6 +1422,7 @@
                 progresoMin: 0.19,
                 progresoMax: 0.30,
                 accentColor: "#ff1a1a",
+                imageAlt: "A mathematics medal lying on a desk", // TODO: confirm imageAlt
                 tag: "SECTOR 01 // MATHEMATICS & ENDURANCE",
                 titulo: "THE COST OF POTENTIAL",
                 image: "assets/images/1.png",
@@ -1176,6 +1440,7 @@
                 progresoMin: 0.445,
                 progresoMax: 0.50,
                 accentColor: "#9933ff",
+                imageAlt: "A broken Xbox controller being repaired", // TODO: confirm imageAlt
                 tag: "SECTOR 02 // 3D MODELING AND HARDWARE KNOWLEDGE",
                 titulo: "MIND AND HAND",
                 image: "assets/images/2.png",
@@ -1192,14 +1457,16 @@
                 progresoMin: 0.68,
                 progresoMax: 0.73,
                 accentColor: "#ffcc00",
+                imageAlt: "A farmer holding plantains", // TODO: confirm imageAlt
                 tag: "SECTOR 03 // APPLIED SYSTEMS",
                 titulo: "COMMUNITY CODE",
                 image: "assets/images/3.png",
                 contentHtml: `
                     <p>In 2011, a farmer in Colimes told the newspaper El Telégrafo that he was paid seventy cents for a large bunch of green plantains, which retailers sold for three dollars at the local market. He said the buyers who came to his farm would not purchase at all unless he accepted that price.</p>
-                    <blockquote class="cp-pull-quote">"So we are forced to give in." Pedro Ochoa, farmer</blockquote>
+                    <blockquote class="cp-pull-quote">"So we are forced to give in."<cite>Pedro Ochoa, farmer in Colimes, El Telégrafo, 2011</cite></blockquote>
                     <p>For that one bunch, the increase is over 320 percent. Agriculture is a pillar of Ecuador's economy, yet the farmers who feed the country often keep a small share of what their harvest sells for. That made me angry, and I wanted to test a direct alternative. I built Verduléate by myself: a zero commission web marketplace prototype that connects growers directly to household buyers, with catalog listings, real time order inquiries, and no middleman surcharges. It won first place at the 593 Challenge.</p>
                     <p>The year before, my team won first place at the same summit with Camella EC, an open labor platform addressing contract informality. According to INEC, over four million people in Ecuador work in the informal sector without contracts or benefits. We built a platform that matches tradespeople directly with household jobs and guides independent workers through registering for voluntary social security.</p>
+                    <p style="font-size: 13px; color: #9aa0a6;">Source: El Telégrafo, 6 November 2011, "La intermediación afecta el precio de los productos".</p>
                 `,
                 sector: "q3"
             },
@@ -1207,6 +1474,7 @@
                 progresoMin: 0.875,
                 progresoMax: 0.93,
                 accentColor: "#00cc44",
+                imageAlt: "Origami paper cranes on a table", // TODO: confirm imageAlt
                 tag: "SECTOR 04 // THE HUMAN SLIPSTREAM",
                 titulo: "PAPER & VERSE",
                 image: "assets/images/4.png",
@@ -1238,6 +1506,8 @@
         let velocidadActual = 0;
         let droneVelocity = new THREE.Vector3(0, 0, 0);
         const keys = { w: false, s: false, a: false, d: false, q: false, e: false, arrowup: false, arrowdown: false };
+        window.addEventListener('blur', clearKeys);
+        window.addEventListener('visibilitychange', clearKeys);
 
         window.addEventListener('keydown', (e) => {
             const keyLower = e.key.toLowerCase();
@@ -1259,20 +1529,107 @@
         let raceStarted = false;
         let modelsLoadedCount = 0;
 
+        function updateTouchUI() {
+            try {
+                const twBtn = document.getElementById('take-wheel-btn');
+                const tcDiv = document.getElementById('touch-controls');
+                const hud = document.getElementById('hud-dashboard');
+
+                const isModal = isModalOpen();
+
+                if (twBtn) twBtn.style.display = (raceStarted && tourMode && !tourFinished && !isModal) ? 'block' : 'none';
+
+                const showManual = (isTouchDevice && raceStarted && !tourMode && !isModal && estadoCamara !== 2);
+                if (tcDiv) tcDiv.style.display = showManual ? 'block' : 'none';
+
+                if (isTouchDevice && window.innerWidth <= 768) {
+                    if (hud) hud.style.display = 'none';
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+
+        function startRace(tour) {
+            tourMode = tour;
+            tourFinished = false;
+            document.getElementById('start-screen').style.opacity = '0';
+            setTimeout(() => document.getElementById('start-screen').style.display = 'none', 500);
+            lapStartTime = Date.now();
+            raceStarted = true;
+            updateTouchUI();
+        }
+
+        try {
+            bind('start-btn', 'click', () => { if (!document.getElementById('start-btn').disabled) startRace(true); });
+            bind('drive-btn', 'click', () => { if (!document.getElementById('drive-btn').disabled) startRace(false); });
+            bind('keep-exploring-btn', 'click', () => {
+                tourMode = false;
+                document.getElementById('tour-complete-card').style.display = 'none';
+                updateTouchUI();
+            });
+            bind('take-wheel-btn', 'click', () => {
+                tourMode = false;
+                updateTouchUI();
+            });
+
+            function bindTouchButton(id, keyBinding) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('pointerdown', (e) => {
+                    e.preventDefault();
+                    e.target.setPointerCapture(e.pointerId);
+                    keys[keyBinding] = true;
+                    if (navigator.vibrate) navigator.vibrate(8);
+                });
+                const release = (e) => {
+                    e.preventDefault();
+                    keys[keyBinding] = false;
+                    if (e.target.hasPointerCapture(e.pointerId)) {
+                        e.target.releasePointerCapture(e.pointerId);
+                    }
+                };
+                el.addEventListener('pointerup', release);
+                el.addEventListener('pointercancel', release);
+                el.addEventListener('lostpointercapture', release);
+            }
+
+            bindTouchButton('touch-gas', 'w');
+            bindTouchButton('touch-rev', 's');
+        } catch (e) {
+            console.warn("UI binding failed:", e);
+        }
+
         function checkModelsLoaded() {
             modelsLoadedCount++;
             if (modelsLoadedCount >= 2) {
                 const startBtn = document.getElementById('start-btn');
-                startBtn.innerText = 'START RACE';
-                startBtn.disabled = false;
-                startBtn.onclick = () => {
-                    document.getElementById('start-screen').style.opacity = '0';
-                    setTimeout(() => document.getElementById('start-screen').style.display = 'none', 500);
-                    lapStartTime = Date.now();
-                    raceStarted = true;
-                };
+                const driveBtn = document.getElementById('drive-btn');
+                if (startBtn && startBtn.innerText !== 'UNAVAILABLE') {
+                    startBtn.innerText = 'TAKE THE TOUR';
+                    startBtn.disabled = false;
+                    if (driveBtn) {
+                        driveBtn.innerText = 'DRIVE IT MYSELF';
+                        driveBtn.disabled = false;
+                        driveBtn.style.display = 'inline-block';
+                    }
+                }
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const s = urlParams.get('sector');
+                if (s !== null) {
+                    const idx = parseInt(s);
+                    if (idx >= 0 && idx < 4) {
+                        progresoCircuito = checkpoints[idx].progresoMin;
+                        startRace(false);
+                        openSectorModal(idx);
+                    }
+                }
             }
         }
+        setTimeout(() => {
+            if (modelsLoadedCount < 2) showWebGLFailure('The 3D scene could not load.');
+        }, 20000);
 
         // 1. Carga del escenario (pista de carreras)
         // --- MÉTODO ANTIGUO SIN DRACO (comentado por seguridad) ---
@@ -1315,7 +1672,12 @@
             scene.add(pista);
             console.log("¡Pista de carreras cargada con DRACO!");
             checkModelsLoaded();
-        });
+        }, (xhr) => {
+            const btn = document.getElementById('start-btn');
+            if (btn && xhr.lengthComputable && btn.innerText.includes('LOADING')) {
+                btn.innerText = 'LOADING ' + Math.round((xhr.loaded / xhr.total) * 100) + '%';
+            }
+        }, (err) => showWebGLFailure('The 3D scene could not load.'));
 
         // 2. Carga del coche independiente
         loader.load('assets/models/lightning_mcqueen.glb', (gltf) => {
@@ -1334,7 +1696,7 @@
 
             console.log("¡Rayo McQueen independiente cargado y acoplado!");
             checkModelsLoaded();
-        });
+        }, undefined, (err) => showWebGLFailure('The 3D scene could not load.'));
 
         const overlay = document.getElementById('checkpoint-overlay');
         const panel = document.getElementById('checkpoint-panel');
@@ -1353,6 +1715,14 @@
         function openSectorModal(index) {
             if (index < 0 || index >= checkpoints.length) return;
             const cp = checkpoints[index];
+            lastFocus = document.activeElement;
+            const cContainer = document.getElementById('canvas-container');
+            const timingH = document.getElementById('timing-hud');
+            const hudDash = document.getElementById('hud-dashboard');
+            if (cContainer) cContainer.setAttribute('aria-hidden', 'true');
+            if (timingH) timingH.setAttribute('aria-hidden', 'true');
+            if (hudDash) hudDash.setAttribute('aria-hidden', 'true');
+
             lastOpenedSector = index;
 
             // Clear driving inputs and freeze speed immediately
@@ -1370,6 +1740,9 @@
 
             if (cpTag) cpTag.innerText = cp.tag || `SECTOR 0${index + 1}`;
             if (cpTitle) cpTitle.innerText = cp.titulo;
+
+            const stepInd = document.getElementById('cp-step-indicator');
+            if (stepInd) stepInd.innerText = (index + 1) + ' / ' + checkpoints.length;
 
             if (cp.image) {
                 cpImg.src = cp.image;
@@ -1394,12 +1767,36 @@
 
             const continueBtn = document.getElementById('cp-continue-btn');
             if (continueBtn) continueBtn.focus();
+            if (typeof updateTouchUI === 'function') updateTouchUI();
+        }
+
+        try {
+            bind('cp-prev-btn', 'click', () => {
+                let nextIndex = lastOpenedSector - 1;
+                if (nextIndex < 0) nextIndex = checkpoints.length - 1;
+                openSectorModal(nextIndex);
+            });
+            bind('cp-next-btn', 'click', () => {
+                let nextIndex = (lastOpenedSector + 1) % checkpoints.length;
+                openSectorModal(nextIndex);
+            });
+            bind('cp-continue-btn', 'click', closeSectorModal);
+        } catch (e) {
+            console.warn("Modal navigation failed to initialize:", e);
         }
 
         function closeSectorModal() {
             if (!isModalOpen()) return;
             panel.classList.remove('visible');
             if (overlay) overlay.classList.remove('visible');
+            if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+            const cContainer = document.getElementById('canvas-container');
+            const timingH = document.getElementById('timing-hud');
+            const hudDash = document.getElementById('hud-dashboard');
+            if (cContainer) cContainer.removeAttribute('aria-hidden');
+            if (timingH) timingH.removeAttribute('aria-hidden');
+            if (hudDash) hudDash.removeAttribute('aria-hidden');
+            if (typeof updateTouchUI === 'function') updateTouchUI();
         }
 
         // Trap focus inside modal while open
@@ -1516,12 +1913,14 @@
 
             // Aceleración con W/S
             const modalOpen = isModalOpen();
-            const acelerando = raceStarted && !modalOpen && estadoCamara !== 2 && (keys.w || keys.arrowup);
+            const autoDriving = tourMode && !tourFinished && raceStarted && !modalOpen;
+            const acelerando = raceStarted && !modalOpen && estadoCamara !== 2 && (keys.w || keys.arrowup || autoDriving);
             const frenando = raceStarted && !modalOpen && estadoCamara !== 2 && (keys.s || keys.arrowdown);
 
             const prevProgreso = progresoCircuito;
             if (acelerando) {
-                velocidadActual = THREE.MathUtils.lerp(velocidadActual, 0.002, 0.04);
+                const targetSpeed = tourMode ? 0.0012 : 0.002;
+                velocidadActual = THREE.MathUtils.lerp(velocidadActual, targetSpeed, 0.04);
                 progresoCircuito += velocidadActual;
             } else if (frenando) {
                 velocidadActual = THREE.MathUtils.lerp(velocidadActual, -0.0015, 0.04);
@@ -1533,12 +1932,26 @@
 
             // --- LÓGICA DE CRONOMETRAJE DE VUELTAS ---
             if (raceStarted) {
-                const now = Date.now();
+                if (modalOpen && !pausedAt) pausedAt = Date.now();
+                if (!modalOpen && pausedAt) { lapStartTime += Date.now() - pausedAt; pausedAt = 0; }
+                const now = pausedAt || Date.now();
                 const currentLapMs = now - lapStartTime;
                 currentTimeEl.textContent = formatTime(currentLapMs);
 
                 if (progresoCircuito >= 1) {
                     progresoCircuito -= 1;
+                    shownThisLap.fill(false);
+
+                    if (tourMode) {
+                        tourFinished = true;
+                        progresoCircuito = 0;
+                        velocidadActual = 0;
+                        try {
+                            const tc = document.getElementById('tour-complete-card');
+                            if (tc) tc.style.display = 'flex';
+                            if (typeof updateTouchUI === 'function') updateTouchUI();
+                        } catch (e) { }
+                    }
 
                     // Chequeo anti-trampas: asegurar que se pasaron los 4 sectores
                     const allSectorsVisited = sectorStates.every(state => state === true);
@@ -1570,6 +1983,11 @@
             // Lógica de Telemetría Visual (SVG HUD)
             const speedKMH = Math.round(Math.abs(velocidadActual) * 140000);
             svgKmh.textContent = speedKMH;
+
+            try {
+                const ts = document.getElementById('touch-speed');
+                if (ts) ts.innerText = speedKMH + ' KM/H';
+            } catch (e) { }
 
             // Simulación de RPM y Marcha
             const rpm = Math.min(speedKMH * 38 + (speedKMH > 0 ? Math.random() * 100 : 0), 12000);
@@ -1681,26 +2099,17 @@
 
         function verificarCheckpoints(prevProg, currProg) {
             if (prevProg === undefined || currProg === undefined) return;
-            // Omitir saltos bruscos por cambio de vuelta
             if (Math.abs(currProg - prevProg) > 0.1) return;
-
             for (let i = 0; i < checkpoints.length; i++) {
                 const target = checkpoints[i].progresoMin;
-
-                // Detectar cruce del punto progresoMin (tanto hacia adelante como en reversa)
                 const crossedForward = prevProg < target && currProg >= target;
-                const crossedBackward = prevProg > target && currProg <= target;
-
-                if (crossedForward || crossedBackward) {
-                    if (!sectorStates[i]) {
-                        if (i === 0 || sectorStates[i - 1] === true) {
-                            sectorStates[i] = true;
-                            const randomColor = sectorColors[i] || '#ff1a1a';
-                            sectorBars[i].style.background = randomColor;
-                            sectorBars[i].style.color = '#fff';
-                        }
+                if (crossedForward && !shownThisLap[i]) {
+                    shownThisLap[i] = true;
+                    if (!sectorStates[i] && (i === 0 || sectorStates[i - 1] === true)) {
+                        sectorStates[i] = true;
+                        sectorBars[i].style.background = sectorColors[i] || '#ff1a1a';
+                        sectorBars[i].style.color = '#fff';
                     }
-
                     openSectorModal(i);
                     break;
                 }
@@ -1738,7 +2147,7 @@
                 hudDashboard.style.visibility = 'visible';
                 camToggleBtn.style.visibility = 'visible';
                 if (homeBtn) homeBtn.style.visibility = 'visible';
-                showToast("Free Camera: Drag the mouse to rotate around the car.");
+                showToast(isTouchDevice ? "Drag to rotate" : "Free Camera: Drag the mouse to rotate around the car.");
             } else {
                 controls.enabled = false;
                 controls.maxPolarAngle = Math.PI / 2 - 0.05;
@@ -1748,6 +2157,7 @@
                 if (homeBtn) homeBtn.style.visibility = 'visible';
                 showToast("Fixed Camera: Static rear view");
             }
+            if (typeof updateTouchUI === 'function') updateTouchUI();
         }
 
         function toggleDrone() {
@@ -1784,15 +2194,18 @@
                 if (homeBtn) homeBtn.style.visibility = 'visible';
                 showToast("Fixed Camera: Static rear view");
             }
+            if (typeof updateTouchUI === 'function') updateTouchUI();
         }
 
         function returnToMenu() {
+            closeSectorModal();
             const startScreen = document.getElementById('start-screen');
             startScreen.style.display = 'flex';
             setTimeout(() => {
                 startScreen.style.opacity = '1';
             }, 10);
             raceStarted = false;
+            if (typeof updateTouchUI === 'function') updateTouchUI();
         }
 
         window.addEventListener('resize', () => {
