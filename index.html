@@ -8,7 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Adrián Garrido - MyBlueprint</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;600;700&display=swap');
 
         * {
             margin: 0;
@@ -358,7 +358,14 @@
             color: rgba(255, 255, 255, 0.4);
             background: #2a2a2a;
             border-right: 1px solid rgba(0, 0, 0, 0.6);
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.3s, color 0.3s, filter 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .sector-bar:hover {
+            color: #ffffff;
+            filter: brightness(1.25);
         }
 
         .sector-bar:last-child {
@@ -414,54 +421,277 @@
             box-shadow: 0 6px 20px rgba(85, 82, 82, 0.5);
         }
 
+        :root {
+            --sector-accent: #ff1a1a;
+        }
+
+        #checkpoint-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 19;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 200ms ease-out;
+        }
+
+        #checkpoint-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         #checkpoint-panel {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-            width: 90%;
-            max-width: 440px;
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid #ff1801;
-            padding: 35px;
-            border-radius: 8px;
+            transform: translate(-50%, calc(-50% + 12px));
+            width: 90vw;
+            max-width: 800px;
+            max-height: 90vh;
+            background: rgba(16, 18, 22, 0.94);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
             z-index: 20;
             opacity: 0;
             pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-            color: #222;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+            color: #E8EAED;
+            transition: opacity 200ms ease-out, transform 200ms ease-out;
+            text-align: justify;
+        }
+
+        /* 3px Accent bar across top */
+        #checkpoint-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--sector-accent);
+            z-index: 5;
         }
 
         #checkpoint-panel.visible {
             opacity: 1;
             pointer-events: auto;
-            transform: translate(-50%, -50%) scale(1);
+            transform: translate(-50%, -50%);
+        }
+
+        /* 44px Touch Target Close Button */
+        #cp-close-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: rgba(0, 0, 0, 0.4);
+            color: #bdc1c6;
+            font-size: 26px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 10;
+            transition: color 150ms, background 150ms;
+        }
+
+        #cp-close-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #cp-close-btn:focus-visible {
+            outline: 2px solid var(--sector-accent);
+            outline-offset: 2px;
+        }
+
+        #cp-scroll-body {
+            overflow-y: auto;
+            flex: 1;
+            padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        #cp-scroll-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #cp-scroll-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        #cp-img-container {
+            width: 100%;
+            max-height: 250px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #cp-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            display: block;
+        }
+
+        .cp-inner-content {
+            padding: 24px 32px 12px;
+        }
+
+        #cp-tag {
+            font-family: monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--sector-accent);
+            margin-bottom: 8px;
         }
 
         #cp-title {
-            font-size: 18px;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 30px;
             font-weight: 700;
-            text-align: center;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            margin-bottom: 20px;
+            line-height: 1.2;
         }
 
         #cp-desc {
-            color: #444;
-            font-size: 14px;
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 17px;
+            line-height: 1.65;
+            color: #E8EAED;
+            width: 100%;
         }
 
-        .nav-hint {
-            font-size: 11px;
-            color: #ff1801;
-            margin-top: 25px;
-            font-weight: bold;
-            text-align: center;
-            letter-spacing: 1px;
+        #cp-desc p {
+            margin-bottom: 1em;
+        }
+
+        #cp-desc p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Pull quote: 22px, 3px accent border on the left, italic, exact wording */
+        .cp-pull-quote {
+            font-size: 22px;
+            line-height: 1.4;
+            font-weight: 600;
+            color: #ffffff;
+            border-left: 3px solid var(--sector-accent);
+            padding: 8px 0 8px 18px;
+            margin: 1.2em 0;
+            font-style: italic;
+        }
+
+        /* Footer & Buttons */
+        .cp-footer {
+            padding: 16px 32px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(16, 18, 22, 0.98);
+        }
+
+        #cp-continue-btn {
+            background: #ffffff;
+            color: #101216;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 150ms;
+        }
+
+        #cp-continue-btn:hover {
+            background: #e4e7eb;
+        }
+
+        #cp-continue-btn:focus-visible {
+            outline: 2px solid var(--sector-accent);
+            outline-offset: 2px;
+        }
+
+        /* Mobile Layout (< 768px): Bottom sheet, 85% height, iPhone safe area */
+        @media (max-width: 768px) {
+            #checkpoint-panel {
+                top: auto;
+                bottom: 0;
+                left: 0;
+                transform: translateY(100%);
+                width: 100vw;
+                max-width: 100vw;
+                height: 85vh;
+                max-height: 85vh;
+                border-radius: 16px 16px 0 0;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+            }
+
+            #checkpoint-panel.visible {
+                transform: translateY(0);
+            }
+
+            .cp-inner-content {
+                padding: 20px 20px 8px;
+            }
+
+            #cp-title {
+                font-size: 24px;
+                margin-bottom: 16px;
+            }
+
+            #cp-desc {
+                font-size: 16px;
+            }
+
+            .cp-pull-quote {
+                font-size: 19px;
+                padding-left: 14px;
+            }
+
+            .cp-footer {
+                padding: 14px 20px max(20px, env(safe-area-inset-bottom));
+                flex-direction: column;
+                gap: 0;
+            }
+
+
+            #cp-continue-btn {
+                width: 100%;
+                padding: 14px;
+                font-size: 16px;
+                text-align: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            #checkpoint-panel,
+            #checkpoint-overlay {
+                transition: none !important;
+            }
         }
     </style>
 </head>
@@ -597,11 +827,22 @@
                 stroke="#fff" stroke-width="2" opacity="0.15" />
         </svg>
     </div>
-
-    <div id="checkpoint-panel">
-        <h2 id="cp-title">INSIGHT</h2>
-        <p id="cp-desc"></p>
-        <div class="nav-hint">[ Mantén presionado W para continuar la carrera ]</div>
+    <div id="checkpoint-overlay" onclick="closeSectorModal()"></div>
+    <div id="checkpoint-panel" role="dialog" aria-modal="true" aria-labelledby="cp-title">
+        <button id="cp-close-btn" aria-label="Close sector modal" onclick="closeSectorModal()">&times;</button>
+        <div id="cp-scroll-body">
+            <div id="cp-img-container" style="display: none;">
+                <img id="cp-img" src="" alt="Sector insight image">
+            </div>
+            <div class="cp-inner-content">
+                <div id="cp-tag">SECTOR 01 // MATHEMATICS & ENDURANCE</div>
+                <h2 id="cp-title">THE COST OF POTENTIAL</h2>
+                <div id="cp-desc"></div>
+            </div>
+        </div>
+        <div class="cp-footer">
+            <button id="cp-continue-btn" onclick="closeSectorModal()">Continue</button>
+        </div>
     </div>
 
     <div id="toast-message"></div>
@@ -914,10 +1155,69 @@
         */
         // --- 4. DATA DE INSIGHTS ---
         const checkpoints = [
-            { progresoMin: 0.20, progresoMax: 0.25, titulo: "S1: THE HORIZONTAL ANCHOR", desc: "Top grades are often seen as an individual race, but earning the National Flag Bearer distinction taught me about collective slipstream...", sector: "q1" },
-            { progresoMin: 0.45, progresoMax: 0.50, titulo: "S2: THE ARCHITECTURE OF FAILURE", desc: "In competitive mathematics, losing was my default setting for years. However, data analysis taught me that friction is mandatory for acceleration...", sector: "q2" },
-            { progresoMin: 0.68, progresoMax: 0.73, titulo: "S3: BENDING THE FRAMEWORKS", desc: "I don't write code to test frameworks; I bend technology to solve systemic friction...", sector: "q3" },
-            { progresoMin: 0.88, progresoMax: 0.93, titulo: "S4: THE HUMAN TELEMETRY", desc: "Volunteering is where abstract logic meets raw human telemetry. Engineering without empathy is just math...", sector: "q4" }
+            {
+                progresoMin: 0.19,
+                progresoMax: 0.30,
+                accentColor: "#ff1a1a",
+                tag: "SECTOR 01 // MATHEMATICS & ENDURANCE",
+                titulo: "THE COST OF POTENTIAL",
+                image: "assets/images/1.png",
+                contentHtml: `
+                    <p>In every other classroom, I was the student who made work look effortless. In the math club, I felt quiet humiliation. Three teammates kept collecting gold medals while I was struggling to place. I showed up to practice having already accepted defeat.</p>
+                    <p>In ninth grade, my teacher put my name on the varsity roster. I went to his desk to ask about it. He looked up and said:</p>
+                    <blockquote class="cp-pull-quote">"Because I see the potential in you."</blockquote>
+                    <p>We won first place. My score was nowhere near the top, and the medal I had barely touched made me feel sick. I could not look him in the eyes. He had bet on me, and I had handed him a win I did not earn.</p>
+                    <p>I went to the camps, eight hours a day, and solved the hardest problems myself instead of waiting for teammates. I worked through past exams until my notebooks tore and drilled every geometry and number theory proof I had been avoiding.</p>
+                    <p>In tenth grade I won an individual bronze at OMEC. The next year our team won the national championship, and I knew which problems were mine. He said nothing about it, and I did not need him to.</p>
+                `,
+                sector: "q1"
+            },
+            {
+                progresoMin: 0.445,
+                progresoMax: 0.50,
+                accentColor: "#9933ff",
+                tag: "SECTOR 02 // 3D MODELING AND HARDWARE KNOWLEDGE",
+                titulo: "MIND AND HAND",
+                image: "assets/images/2.png",
+                contentHtml: `
+                    <p>The Coca-Cola truck I built rolled across the classroom floor when the headlights lit up and the small motor caught. That fourth grade project was my first exposure to physical circuits: batteries, a switch, and raw wiring that made an object move on its own.</p>
+                    <p>Years later, the right bumper on my Xbox 360 controller stopped registering. I opened the shell to find the cause. The plastic leg of the RB button had worn down, so it no longer reached the small switch on the board.</p>
+                    <blockquote class="cp-pull-quote">I had no 3D printer to make a replacement, so I rebuilt the missing length with silicone until it clicked again. I still use that controller.</blockquote>
+                    <p>That same habit showed up in digital drafting. In eighth grade, I used SketchUp to design a pedestrian bridge, pacing out real walkways at dismissal to check railing heights and clearances against crowded foot traffic. On my own, I used AutoCAD to draft model rockets and controller shells for fun. For a business class, I built a full hotel model in SketchUp, taking the site's real dimensions from satellite images.</p>
+                    <p>The hardest measuring job came with this portfolio. I wanted the car's jump to look accurate instead of hard coded, so I marked every coordinate of its route in Blender, then corrected for the way Blender and my code define the X, Y, and Z axes differently. Geometry I once solved on notebook pages now runs as code in the scene around this page, built in Three.js with models I made in Blender.</p>
+                `,
+                sector: "q2"
+            },
+            {
+                progresoMin: 0.68,
+                progresoMax: 0.73,
+                accentColor: "#ffcc00",
+                tag: "SECTOR 03 // APPLIED SYSTEMS",
+                titulo: "COMMUNITY CODE",
+                image: "assets/images/3.png",
+                contentHtml: `
+                    <p>In 2011, a farmer in Colimes told the newspaper El Telégrafo that he was paid seventy cents for a large bunch of green plantains, which retailers sold for three dollars at the local market. He said the buyers who came to his farm would not purchase at all unless he accepted that price.</p>
+                    <blockquote class="cp-pull-quote">"So we are forced to give in." Pedro Ochoa, farmer</blockquote>
+                    <p>For that one bunch, the increase is over 320 percent. Agriculture is a pillar of Ecuador's economy, yet the farmers who feed the country often keep a small share of what their harvest sells for. That made me angry, and I wanted to test a direct alternative. I built Verduléate by myself: a zero commission web marketplace prototype that connects growers directly to household buyers, with catalog listings, real time order inquiries, and no middleman surcharges. It won first place at the 593 Challenge.</p>
+                    <p>The year before, my team won first place at the same summit with Camella EC, an open labor platform addressing contract informality. According to INEC, over four million people in Ecuador work in the informal sector without contracts or benefits. We built a platform that matches tradespeople directly with household jobs and guides independent workers through registering for voluntary social security.</p>
+                `,
+                sector: "q3"
+            },
+            {
+                progresoMin: 0.875,
+                progresoMax: 0.93,
+                accentColor: "#00cc44",
+                tag: "SECTOR 04 // THE HUMAN SLIPSTREAM",
+                titulo: "PAPER & VERSE",
+                image: "assets/images/4.png",
+                contentHtml: `
+                    <p>While volunteering to serve school lunches in a low-income community in Guayaquil, I was handed dented aluminum bowls that looked like pet dishes, and tarnished metal cups. Ladling hot moro (rice cooked with lentils and cheese) and fried chicken into them felt completely wrong.</p>
+                    <blockquote class="cp-pull-quote">At home, my meals arrived on ceramic plates with clean silverware.</blockquote>
+                    <p>I wrote poetry about people whose situations I could not change by serving a meal. In our school's literary competition, centered that year on the crisis in Afghanistan, my Spanish teacher encouraged us to enter. I submitted a poem about families fleeing their homes at night and hiding at checkpoints, which earned second place in the contest.</p>
+                    <p>Later, I returned to that same community to organize Pinceladas y Pliegues (Brushstrokes and Folds). In workshops, I taught painting and origami techniques to parents so they could share the craft with their children. During one session, a mother smoothed a sheet of blue paper with her thumb until the creases sat sharp, telling me her daughter had never owned an art supply of her own. She folded three paper cranes to place on her daughter's bedside table.</p>
+                `,
+                sector: "q4"
+            }
         ];
 
         // --- 5. VARIABLES DE JUEGO Y CONTENEDOR DE GIRO ---
@@ -940,8 +1240,18 @@
         const keys = { w: false, s: false, a: false, d: false, q: false, e: false, arrowup: false, arrowdown: false };
 
         window.addEventListener('keydown', (e) => {
-            if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = true;
-            if (e.key.toLowerCase() === 'c') toggleCamara();
+            const keyLower = e.key.toLowerCase();
+            if (isModalOpen()) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    closeSectorModal();
+                    return;
+                }
+                // Do not dismiss with W or ArrowUp; block driving keys while modal is open
+                return;
+            }
+            if (keyLower in keys) keys[keyLower] = true;
+            if (keyLower === 'c') toggleCamara();
             if (e.key === '/') toggleDrone();
         });
         window.addEventListener('keyup', (e) => { if (e.key.toLowerCase() in keys) keys[e.key.toLowerCase()] = false; });
@@ -1026,16 +1336,94 @@
             checkModelsLoaded();
         });
 
+        const overlay = document.getElementById('checkpoint-overlay');
         const panel = document.getElementById('checkpoint-panel');
+        const cpTag = document.getElementById('cp-tag');
         const cpTitle = document.getElementById('cp-title');
+        const cpImgContainer = document.getElementById('cp-img-container');
+        const cpImg = document.getElementById('cp-img');
         const cpDesc = document.getElementById('cp-desc');
+        let currentCpIndex = -1;
+        let lastOpenedSector = 0;
+
+        function isModalOpen() {
+            return panel && panel.classList.contains('visible');
+        }
+
+        function openSectorModal(index) {
+            if (index < 0 || index >= checkpoints.length) return;
+            const cp = checkpoints[index];
+            lastOpenedSector = index;
+
+            // Clear driving inputs and freeze speed immediately
+            keys.w = false;
+            keys.s = false;
+            keys.a = false;
+            keys.d = false;
+            keys.arrowup = false;
+            keys.arrowdown = false;
+            velocidadActual = 0;
+
+            // Set dynamic sector accent color variable
+            const accent = cp.accentColor || '#ff1a1a';
+            document.documentElement.style.setProperty('--sector-accent', accent);
+
+            if (cpTag) cpTag.innerText = cp.tag || `SECTOR 0${index + 1}`;
+            if (cpTitle) cpTitle.innerText = cp.titulo;
+
+            if (cp.image) {
+                cpImg.src = cp.image;
+                cpImgContainer.style.display = 'block';
+            } else {
+                cpImgContainer.style.display = 'none';
+            }
+
+            if (cp.contentHtml) {
+                cpDesc.innerHTML = cp.contentHtml;
+            } else if (cp.paragraphs && cp.paragraphs.length > 0) {
+                cpDesc.innerHTML = cp.paragraphs.map(p => `<p>${p}</p>`).join('');
+            } else {
+                cpDesc.innerHTML = `<p>${cp.desc || ''}</p>`;
+            }
+
+            const scrollBody = document.getElementById('cp-scroll-body');
+            if (scrollBody) scrollBody.scrollTop = 0;
+
+            panel.classList.add('visible');
+            if (overlay) overlay.classList.add('visible');
+
+            const continueBtn = document.getElementById('cp-continue-btn');
+            if (continueBtn) continueBtn.focus();
+        }
+
+        function closeSectorModal() {
+            if (!isModalOpen()) return;
+            panel.classList.remove('visible');
+            if (overlay) overlay.classList.remove('visible');
+        }
+
+        // Trap focus inside modal while open
+        panel.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                const focusable = panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    last.focus();
+                    e.preventDefault();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    first.focus();
+                    e.preventDefault();
+                }
+            }
+        });
 
         // Referencias al Timing HUD
         let lapCount = 1;
         let lapStartTime = Date.now();
         let bestLapTime = Infinity;
         let sectorStates = [false, false, false, false];
-        const sectorColors = ['#00cc44', '#9933ff', '#ffcc00', '#ff1a1a']; // Verde, Morado, Amarillo, Rojo
+        const sectorColors = ['#ff1a1a', '#9933ff', '#ffcc00', '#00cc44']; // S1 Red, S2 Purple, S3 Yellow, S4 Green
 
         const lapCountEl = document.getElementById('lap-count');
         const currentTimeEl = document.getElementById('current-time');
@@ -1046,6 +1434,22 @@
             document.getElementById('ui-sec-2'),
             document.getElementById('ui-sec-3')
         ];
+
+        sectorBars.forEach((bar, idx) => {
+            if (bar) {
+                bar.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openSectorModal(idx);
+                });
+            }
+        });
+
+        const timingSectorsEl = document.getElementById('timing-sectors');
+        if (timingSectorsEl) {
+            timingSectorsEl.addEventListener('click', () => {
+                openSectorModal(lastOpenedSector);
+            });
+        }
 
         function formatTime(ms) {
             if (ms === Infinity) return "--:--.---";
@@ -1111,9 +1515,11 @@
             waterMat.uniforms.uTime.value += 0.016;
 
             // Aceleración con W/S
-            const acelerando = raceStarted && estadoCamara !== 2 && (keys.w || keys.arrowup);
-            const frenando = raceStarted && estadoCamara !== 2 && (keys.s || keys.arrowdown);
+            const modalOpen = isModalOpen();
+            const acelerando = raceStarted && !modalOpen && estadoCamara !== 2 && (keys.w || keys.arrowup);
+            const frenando = raceStarted && !modalOpen && estadoCamara !== 2 && (keys.s || keys.arrowdown);
 
+            const prevProgreso = progresoCircuito;
             if (acelerando) {
                 velocidadActual = THREE.MathUtils.lerp(velocidadActual, 0.002, 0.04);
                 progresoCircuito += velocidadActual;
@@ -1121,7 +1527,7 @@
                 velocidadActual = THREE.MathUtils.lerp(velocidadActual, -0.0015, 0.04);
                 progresoCircuito += velocidadActual;
             } else {
-                velocidadActual = THREE.MathUtils.lerp(velocidadActual, 0, 0.08);
+                velocidadActual = THREE.MathUtils.lerp(velocidadActual, 0, modalOpen ? 0.16 : 0.08);
                 progresoCircuito += velocidadActual;
             }
 
@@ -1267,43 +1673,37 @@
                 }
             }
 
-            verificarCheckpoints();
-
-            // Only render the heavy 3D scene if the race has actually started.
-            // This prevents the GPU from being overworked while the start screen (with the video) is visible.
             if (raceStarted) {
+                verificarCheckpoints(prevProgreso, progresoCircuito);
                 renderer.render(scene, camera);
             }
         }
 
-        function verificarCheckpoints() {
-            let enZona = false;
+        function verificarCheckpoints(prevProg, currProg) {
+            if (prevProg === undefined || currProg === undefined) return;
+            // Omitir saltos bruscos por cambio de vuelta
+            if (Math.abs(currProg - prevProg) > 0.1) return;
+
             for (let i = 0; i < checkpoints.length; i++) {
-                let cp = checkpoints[i];
+                const target = checkpoints[i].progresoMin;
 
-                // Encender el sector permanentemente al entrar físicamente en la zona de la historia
-                // Validar que se enciendan cronológicamente
-                if (progresoCircuito >= cp.progresoMin && progresoCircuito <= cp.progresoMax && !sectorStates[i]) {
-                    if (i === 0 || sectorStates[i - 1] === true) {
-                        sectorStates[i] = true;
-                        const randomColor = sectorColors[Math.floor(Math.random() * sectorColors.length)];
-                        sectorBars[i].style.background = randomColor;
-                        sectorBars[i].style.color = '#fff';
-                    }
-                }
+                // Detectar cruce del punto progresoMin (tanto hacia adelante como en reversa)
+                const crossedForward = prevProg < target && currProg >= target;
+                const crossedBackward = prevProg > target && currProg <= target;
 
-                if (progresoCircuito >= cp.progresoMin && progresoCircuito <= cp.progresoMax) {
-                    enZona = true;
-                    if (!panel.classList.contains('visible')) {
-                        cpTitle.innerText = cp.titulo;
-                        cpDesc.innerText = cp.desc;
-                        panel.classList.add('visible');
+                if (crossedForward || crossedBackward) {
+                    if (!sectorStates[i]) {
+                        if (i === 0 || sectorStates[i - 1] === true) {
+                            sectorStates[i] = true;
+                            const randomColor = sectorColors[i] || '#ff1a1a';
+                            sectorBars[i].style.background = randomColor;
+                            sectorBars[i].style.color = '#fff';
+                        }
                     }
+
+                    openSectorModal(i);
                     break;
                 }
-            }
-            if (!enZona && panel.classList.contains('visible')) {
-                panel.classList.remove('visible');
             }
         }
 
