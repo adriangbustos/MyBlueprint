@@ -1128,8 +1128,8 @@
         // El fondo lo maneja el skybox shader — no usamos scene.background sólido
         // scene.background = new THREE.Color(0xf0f4f8);
 
-        // Niebla exponencial: hace que los bordes del modelo se fundan con el horizonte celeste
-        scene.fog = new THREE.FogExp2(0xc8e8f8, 0.018);
+        // Niebla lineal de horizonte: clara en primer plano, difumina suavemente en la lejanía
+        scene.fog = new THREE.Fog(0xd0eeff, 60, 320);
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -1289,44 +1289,8 @@
 
         // --- PLANO DE AGUA OCEÁNICA ---
         // Cubre todo el espacio más allá del modelo; la niebla lo difumina en el horizonte
-        const waterTime = { value: 0.0 };
-        const waterGeo = new THREE.PlaneGeometry(1200, 1200, 32, 32);
-        const waterMat = new THREE.ShaderMaterial({
-            uniforms: {
-                uTime: { value: 0.0 },
-                uColorDeep: { value: new THREE.Color(0x3b9dc8) },  // Azul profundo
-                uColorShallow: { value: new THREE.Color(0x6cc8e8) } // Celeste agua
-            },
-            vertexShader: `
-                uniform float uTime;
-                varying float vHeight;
-                varying vec2 vUv;
-                void main() {
-                    vUv = uv;
-                    vec3 pos = position;
-                    // Ondas amplias y suaves — baja frecuencia, poca altura
-                    pos.z += sin(pos.x * 0.05 + uTime * 0.5) * 0.05;
-                    pos.z += sin(pos.y * 0.06 + uTime * 0.7) * 0.035;
-                    pos.z += cos(pos.x * 0.09 + pos.y * 0.07 + uTime * 0.4) * 0.02;
-                    vHeight = pos.z;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                }
-            `,
-            fragmentShader: `
-                uniform vec3 uColorDeep;
-                uniform vec3 uColorShallow;
-                varying float vHeight;
-                varying vec2 vUv;
-                void main() {
-                    float t = clamp((vHeight + 0.25) * 4.0, 0.0, 1.0);
-                    vec3 col = mix(uColorDeep, uColorShallow, t);
-                    // Brillo especular sutil en crestas
-                    col += vec3(0.15) * max(0.0, vHeight * 3.0);
-                    gl_FragColor = vec4(col, 1.0);
-                }
-            `,
-            side: THREE.FrontSide
-        });
+        const waterGeo = new THREE.PlaneGeometry(1200, 1200, 1, 1);
+        const waterMat = new THREE.MeshBasicMaterial({ color: 0x00a8cc, side: THREE.DoubleSide, fog: true });
         const waterMesh = new THREE.Mesh(waterGeo, waterMat);
         waterMesh.rotation.x = -Math.PI / 2;  // Plano horizontal
         waterMesh.position.y = 0.28;            // Nivel alineado con el agua estática del modelo
@@ -1453,7 +1417,7 @@
                     <p>Years later, the right bumper on my Xbox 360 controller stopped registering. I opened the shell to find the cause. The plastic leg of the RB button had worn down, so it no longer reached the small switch on the board.</p>
                     <blockquote class="cp-pull-quote">I had no 3D printer to make a replacement, so I rebuilt the missing length with silicone until it clicked again. I still use that controller.</blockquote>
                     <p>That same habit showed up in digital drafting. In eighth grade, I used SketchUp to design a pedestrian bridge, pacing out real walkways at dismissal to check railing heights and clearances against crowded foot traffic. On my own, I used AutoCAD to draft model rockets and controller shells for fun. For a business class, I built a full hotel model in SketchUp, taking the site's real dimensions from satellite images.</p>
-                    <p>The hardest measuring job came with this portfolio. I wanted the car's jump to look accurate instead of hard coded, so I marked every coordinate of its route in Blender, then corrected for the way Blender and my code define the X, Y, and Z axes differently. Geometry I once solved on notebook pages now runs as code in the scene around this page, built in Three.js with models I made in Blender.</p>
+                    <p>The hardest measuring job came with this portfolio. I wanted the car's jump to look accurate instead of hard coded, so I marked every coordinate of its route in Blender, then corrected for the way Blender and my code define the X, Y, and Z axes differently. Geometry I once solved on notebook pages now runs as code in the scene around this page, which I programmed in Three.js.</p>
                 `,
                 sector: "q2"
             },
@@ -1678,7 +1642,7 @@
         dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/');
         loader.setDRACOLoader(dracoLoader);
 
-        loader.load('assets/models/race_track.glb', (gltf) => {
+        loader.load('assets/models/race_track_decimated-compressed.glb?v=4', (gltf) => {
             const pista = gltf.scene;
 
             pista.traverse((nodo) => {
@@ -1699,7 +1663,7 @@
         }, (err) => showWebGLFailure('The 3D scene could not load.'));
 
         // 2. Carga del coche independiente
-        loader.load('assets/models/lightning_mcqueen.glb', (gltf) => {
+        loader.load('assets/models/lightning_mcqueenPORTAFOLIO.glb?v=4', (gltf) => {
             const cocheMalla = gltf.scene;
 
             cocheMalla.traverse((nodo) => {
@@ -1941,8 +1905,7 @@
                 if (nube.position.x > 150) nube.position.x = -150;
                 if (nube.position.x < -150) nube.position.x = 150;
             });
-            // Animar ondas del agua
-            waterMat.uniforms.uTime.value += 0.016;
+            // Animar ondas del agua (Removido para optimización)
 
             // Aceleración con W/S
             const modalOpen = isModalOpen();
