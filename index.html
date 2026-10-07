@@ -82,7 +82,7 @@
             color: #ffffff;
         }
 
-        .video-bg-container {
+        .image-bg-container {
             position: absolute;
             top: 0;
             left: 0;
@@ -93,20 +93,20 @@
             background: #000000;
         }
 
-        .video-bg-container::after {
+        .image-bg-container::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.65);
-            /* Overlay oscuro */
+            background: rgba(0, 0, 0, 0.40);
+            /* Overlay oscuro de baja opacidad */
             z-index: 1;
             pointer-events: none;
         }
 
-        .bg-video {
+        .bg-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -866,10 +866,8 @@
 
     <!-- START SCREEN -->
     <div id="start-screen">
-        <div class="video-bg-container">
-            <video autoplay loop muted playsinline preload="auto" class="bg-video">
-                <source src="assets/videos/videobackground.mp4" type="video/mp4">
-            </video>
+        <div class="image-bg-container">
+            <img src="assets/images/fondo.webp" alt="Background" class="bg-image">
         </div>
 
         <div class="start-top">
@@ -1070,7 +1068,8 @@
 
     <script>
         // --- 1. CONFIGURACIÓN DE ESCENA (FANDO CLARO DE DÍA) ---
-        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+        const isMobileScreen = window.innerWidth <= 768;
+        const isTouchDevice = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.matchMedia('(pointer: coarse)').matches && isMobileScreen;
         let tourMode = isTouchDevice;
         let tourFinished = false;
         let pausedAt = 0;
@@ -1541,13 +1540,14 @@
                 const hud = document.getElementById('hud-dashboard');
 
                 const isModal = isModalOpen();
+                const isMobile = window.innerWidth <= 768;
 
-                if (twBtn) twBtn.style.display = (raceStarted && tourMode && !tourFinished && !isModal) ? 'block' : 'none';
+                if (twBtn) twBtn.style.display = (isMobile && raceStarted && tourMode && !tourFinished && !isModal) ? 'block' : 'none';
 
-                const showManual = (isTouchDevice && raceStarted && !tourMode && !isModal && estadoCamara !== 2);
+                const showManual = (isMobile && isTouchDevice && raceStarted && !tourMode && !isModal && estadoCamara !== 2);
                 if (tcDiv) tcDiv.style.display = showManual ? 'block' : 'none';
 
-                if (isTouchDevice && window.innerWidth <= 768) {
+                if (isMobile && isTouchDevice) {
                     if (hud) hud.style.display = 'none';
                 }
             } catch (e) {
