@@ -76,8 +76,6 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 5vh 4vw;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
             /* Uses more horizontal space */
             transition: opacity 0.5s;
             font-family: 'EB Garamond', serif;
@@ -843,207 +841,142 @@
             }
         }
 
-        /* --- MOBILE LANDSCAPE OPTIMIZATIONS (Smartphones placed horizontally) --- */
-        @media (max-height: 550px), (orientation: landscape) and (max-height: 600px) {
-            #start-screen {
-                overflow-y: auto !important;
-                -webkit-overflow-scrolling: touch !important;
-                justify-content: flex-start !important;
-                gap: 16px !important;
-                padding: 16px 24px max(24px, env(safe-area-inset-bottom)) !important;
-                height: 100% !important;
-                min-height: 100vh !important;
-                min-height: 100dvh !important;
-            }
-
-            .start-top {
-                align-items: center !important;
-            }
-
-            .start-header {
-                max-width: 75% !important;
-            }
-
-            .header-main {
-                font-size: clamp(24px, 5.5vw, 36px) !important;
-            }
-
-            .header-sub,
-            .header-sub-italic {
-                font-size: clamp(13px, 2.2vw, 16px) !important;
-                margin-top: 4px !important;
-            }
-
-            .start-character img {
-                width: auto !important;
-                max-height: 75px !important;
-                max-width: 90px !important;
-            }
-
-            .start-center {
-                position: static !important;
-                transform: none !important;
-                margin: 8px auto !important;
-                width: 100% !important;
-                max-width: 750px !important;
-                font-size: clamp(14px, 2.4vw, 17px) !important;
-                line-height: 1.45 !important;
-                text-align: center !important;
-            }
-
-            .start-bottom {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                gap: 12px !important;
-                width: 100% !important;
-            }
-
-            .controls-section {
-                display: none !important;
-            }
-
-            .action-section {
-                gap: 8px !important;
-            }
-
-            #start-btn,
-            #drive-btn {
-                font-size: 14px !important;
-                padding: 8px 18px !important;
-            }
-
-            .quote-section {
-                padding-bottom: 8px !important;
-            }
-
-            .quote-text {
-                font-size: 13px !important;
-                text-align: center !important;
-                line-height: 1.35 !important;
-            }
-
-            /* Sector Checkpoint Modal in Landscape: 2-column side-by-side */
+        @media (max-width: 768px) and (max-height: 500px) and (orientation: landscape) {
             #checkpoint-panel {
-                top: 50% !important;
-                bottom: auto !important;
-                left: 50% !important;
-                right: auto !important;
-                transform: translate(-50%, calc(-50% + 12px)) !important;
-                width: min(94vw, 760px) !important;
-                max-width: 760px !important;
-                height: 92vh !important;
-                height: 92dvh !important;
-                max-height: 92dvh !important;
-                border-radius: 12px !important;
-                border: 1px solid rgba(255, 255, 255, 0.12) !important;
-                display: flex !important;
-                flex-direction: column !important;
+                top: 50%;
+                bottom: auto;
+                transform: translate(-50%, calc(-50% + 12px));
+                height: 95vh;
+                max-height: 95vh;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-left: 1px solid rgba(255, 255, 255, 0.12);
+                border-right: 1px solid rgba(255, 255, 255, 0.12);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
             }
 
             #checkpoint-panel.visible {
-                transform: translate(-50%, -50%) !important;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* --- TOUCH PEDALS USER-SELECT & CALLOUT SUPPRESSION --- */
+        #touch-rev,
+        #touch-gas {
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+            touch-action: none !important;
+        }
+
+        /* --- PHONE LANDSCAPE ORIENTATION BLOCKER --- */
+        #orientation-blocker {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            width: 100dvw;
+            height: 100dvh;
+            background: #090a0f;
+            color: #ffffff;
+            z-index: 9999999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .orientation-blocker-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 420px;
+            gap: 16px;
+        }
+
+        .orientation-blocker-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff2a2a;
+            animation: rotatePhoneAnimation 2.2s ease-in-out infinite;
+        }
+
+        @keyframes rotatePhoneAnimation {
+
+            0%,
+            20% {
+                transform: rotate(90deg);
             }
 
-            #cp-scroll-body {
+            50%,
+            75% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(90deg);
+            }
+        }
+
+        #orientation-blocker h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0;
+            letter-spacing: -0.01em;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        #orientation-blocker p {
+            font-size: 14px;
+            color: #9aa0a6;
+            margin: 0;
+            line-height: 1.5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        /* Show blocker when phone is in landscape */
+        @media screen and (orientation: landscape) and (max-height: 520px) and (max-width: 1024px) {
+            #orientation-blocker {
                 display: flex !important;
-                flex-direction: row !important;
-                flex: 1 !important;
-                min-height: 0 !important;
-                overflow: hidden !important;
-            }
-
-            #cp-img-container {
-                width: 36% !important;
-                min-width: 150px !important;
-                max-width: 260px !important;
-                height: 100% !important;
-                max-height: none !important;
-                aspect-ratio: auto !important;
-                flex-shrink: 0 !important;
-                position: relative !important;
-            }
-
-            #cp-img {
-                position: absolute !important;
-                inset: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-                object-position: center !important;
-            }
-
-            .cp-inner-content {
-                flex: 1 !important;
-                padding: 14px 18px !important;
-                overflow-y: auto !important;
-                overscroll-behavior: contain !important;
-            }
-
-            #cp-title {
-                font-size: clamp(17px, 3.2vw, 22px) !important;
-                margin-bottom: 8px !important;
-                line-height: 1.2 !important;
-            }
-
-            #cp-tag {
-                font-size: 10px !important;
-                margin-bottom: 4px !important;
-                letter-spacing: 2px !important;
-            }
-
-            #cp-desc {
-                font-size: 13.5px !important;
-                line-height: 1.5 !important;
-            }
-
-            .cp-pull-quote {
-                font-size: 15px !important;
-                margin: 0.6em 0 !important;
-                padding: 4px 0 4px 10px !important;
-            }
-
-            .cp-footer {
-                padding: 8px 16px max(8px, env(safe-area-inset-bottom)) !important;
-                flex-direction: row !important;
-                gap: 12px !important;
-                align-items: center !important;
-                justify-content: space-between !important;
-            }
-
-            .cp-nav {
-                width: auto !important;
-                gap: 8px !important;
-            }
-
-            #cp-step-indicator {
-                font-size: 13px !important;
-            }
-
-            #cp-prev-btn,
-            #cp-next-btn {
-                padding: 6px 12px !important;
-                font-size: 13px !important;
-            }
-
-            #cp-continue-btn {
-                width: auto !important;
-                padding: 8px 18px !important;
-                font-size: 13px !important;
-            }
-
-            #cp-close-btn {
-                width: 34px !important;
-                height: 34px !important;
-                font-size: 20px !important;
-                top: 6px !important;
-                right: 6px !important;
             }
         }
     </style>
 </head>
 
 <body>
+
+    <!-- PHONE LANDSCAPE BLOCKER -->
+    <div id="orientation-blocker" role="alert" aria-live="assertive">
+        <div class="orientation-blocker-content">
+            <div class="orientation-blocker-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="3" ry="3"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+            </div>
+            <h2>Please Rotate Your Device</h2>
+            <p>This experience is designed only for vertical (portrait) phone format. Please turn your phone upright or
+                use a Tablet or PC/Laptop.</p>
+        </div>
+    </div>
 
     <!-- START SCREEN -->
     <div id="start-screen">
@@ -1216,9 +1149,9 @@
 
     <div id="touch-controls" style="display: none;">
         <button id="touch-rev"
-            style="position: fixed; left: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #ff1a1a; font-weight: bold; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; user-select: none;">REV</button>
+            style="position: fixed; left: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #ff1a1a; font-weight: bold; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none;">REV</button>
         <button id="touch-gas"
-            style="position: fixed; right: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #00cc44; font-weight: bold; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; user-select: none;">GAS</button>
+            style="position: fixed; right: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 76px; height: 76px; border-radius: 50%; background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255,255,255,0.1); color: #00cc44; font-weight: bold; font-size: 14px; z-index: 10; backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: none;">GAS</button>
         <div id="touch-speed"
             style="position: fixed; right: 20px; bottom: calc(max(20px, env(safe-area-inset-bottom)) + 86px); background: rgba(20,20,20,0.9); color: white; padding: 4px 12px; border-radius: 12px; font-family: monospace; font-size: 16px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); z-index: 10;">
             0 KM/H</div>
@@ -1249,8 +1182,8 @@
 
     <script>
         // --- 1. CONFIGURACIÓN DE ESCENA (FANDO CLARO DE DÍA) ---
-        const isMobileScreen = window.innerWidth <= 768 || window.innerHeight <= 550;
-        const isTouchDevice = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && (window.matchMedia('(pointer: coarse)').matches || isMobileScreen);
+        const isMobileScreen = window.innerWidth <= 768;
+        const isTouchDevice = ('ontouchstart' in window || navigator.maxTouchPoints > 0) && window.matchMedia('(pointer: coarse)').matches && isMobileScreen;
         let tourMode = isTouchDevice;
         let tourFinished = false;
         let pausedAt = 0;
@@ -1685,7 +1618,7 @@
                 const hud = document.getElementById('hud-dashboard');
 
                 const isModal = isModalOpen();
-                const isMobile = window.innerWidth <= 768 || window.innerHeight <= 550;
+                const isMobile = window.innerWidth <= 768;
 
                 if (twBtn) twBtn.style.display = (isMobile && raceStarted && tourMode && !tourFinished && !isModal) ? 'block' : 'none';
 
@@ -1742,6 +1675,8 @@
                 el.addEventListener('pointerup', release);
                 el.addEventListener('pointercancel', release);
                 el.addEventListener('lostpointercapture', release);
+                el.addEventListener('contextmenu', (e) => e.preventDefault());
+                el.addEventListener('selectstart', (e) => e.preventDefault());
             }
 
             bindTouchButton('touch-gas', 'w');
