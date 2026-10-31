@@ -1,6 +1,6 @@
 <div align="center">
   <h1>🏎️ Adrián Garrido - MyBlueprint</h1>
-  <p><i>An interactive, low-poly 3D web application designed for College Admissions.</i></p>
+  <p><i>An interactive, low-poly 3D web application designed for college admissions.</i></p>
   
   <a href="https://agb-blueprint.netlify.app/">
     <img src="https://img.shields.io/badge/LIVE%20DEMO-ACCESS%20PLATFORM-0088cc?style=for-the-badge&logo=netlify&logoColor=white" alt="Live Demo on Netlify" />
@@ -17,16 +17,15 @@
 
 ## 💡 Core Concept
 
-Utilizing a racing telemetry metaphor, the project presents deep intellectual insights, leadership reflections, and personal growth across four distinct sectors (Academics, Mathematics, Coding, and Volunteering) rather than a flat list of achievements. 
+Using a racing telemetry interface, the project organizes academic work, mathematics research, software development, and community leadership across four track sectors instead of a standard portfolio list.
 
 <div align="center">
   <img src="assets/images/3dmodel.png" alt="3D Model View" width="800">
 </div>
 
-## 🏁 Details: "The Why, not What"
+## 🏁 Design Philosophy
 
-This portfolio is based entirely on who I am and what motivates me. 
-It contains landmarks from my country and key hints to my hobbies and likings. The HUD resembles F1 telemetry, while the car model is Lightning McQueen—making my passions very clear to give admissions officers an authentic glimpse into who I am beyond the paper.
+Built around personal interests and daily motivations. The interface adapts Formula 1 telemetry styling for the heads-up display, while the vehicle model features Lightning McQueen, connecting technical craft directly with personal interests.
 
 ## 🛠️ Technologies Used
 
@@ -40,10 +39,10 @@ It contains landmarks from my country and key hints to my hobbies and likings. T
 
 ## ⚙️ Technical Architecture
 
-* **3D Engine:** Three.js (Vanilla JS) optimized for real-time 3D rendering of unified low-poly assets.
-* **Controls & Navigation:** Constraint-based spline mechanics (`CatmullRomCurve3`) tied exclusively to `W/S` or Arrow keys to guarantee zero-friction exploration.
-* **Cinematics & UX:** Dual-camera matrix supporting an automated Third-Person Follow Mode, an interactive Orbit Inspection Mode, and a hidden Free Drone Mode.
-* **Frontend UI:** High-contrast responsive HUD overlay rendering simulated speed metrics, lap tracking, and dynamic modal panels for content delivery.
+* **3D Engine:** Three.js (Vanilla JS) rendering low-poly 3D assets optimized for browser performance.
+* **Controls & Navigation:** Spline mechanics (`CatmullRomCurve3`) mapped to `W/S` and Arrow keys for consistent track movement.
+* **Camera Modes:** Dual-camera setup supporting Third-Person Follow Mode, Orbit Inspection Mode, and a Free Drone Mode.
+* **Frontend UI:** HUD overlay rendering simulated velocity, sector progress, and content modals on demand.
 
 ---
 
